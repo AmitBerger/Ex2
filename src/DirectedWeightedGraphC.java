@@ -6,13 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
-    List<NodeData> NodeList;
-    List<EdgeData> EdgeList;
+    private int nodeSize = 0;
+    private int edgeSize = 0;
+    private List<NodeData> NodeList;
+    private List<EdgeData> EdgeList;
 
     public DirectedWeightedGraphC(List<NodeData> NodeL, List<EdgeData> EdgeL) {
         this.NodeList = NodeL;
         this.EdgeList = EdgeL;
-
     }
 
     @Override
@@ -20,17 +21,18 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
         if (NodeList.isEmpty())
             return null;
         return NodeList.get(key);
-
     }
 
     @Override
     public void addNode(NodeData n) {
         for (int i = 0; i < NodeList.size(); i++) {
-            if (NodeList.get(i) == n) {
+            if (NodeList.get(i).getKey() == n.getKey()) {
                 System.out.println("The node already exist!");
+                return;
             }
         }
-      NodeList.add(n);
+        nodeSize++;
+        NodeList.add(n);
     }
 
     @Override

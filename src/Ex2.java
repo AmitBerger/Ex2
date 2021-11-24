@@ -1,5 +1,9 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 
 import java.io.FileNotFoundException;
@@ -17,10 +21,11 @@ import org.json.simple.parser.ParseException;
 public class Ex2 {
     /**
      * This static function will be used to test your implementation
+     *
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    public static DirectedWeightedGraph getGrapg(String json_file) {
+    public static DirectedWeightedGraph getGrapg(String json_file){
         DirectedWeightedGraph ans = null;
         JSONParser jsonParser = new JSONParser();
 
@@ -38,22 +43,34 @@ public class Ex2 {
         }
         return ans;
     }
+
     /**
      * This static function will be used to test your implementation
+     *
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
         DirectedWeightedGraphAlgorithms ans = null;
         // ****** Add your code here ******
-        //
+        File f = new File(json_file);
+        if (f.exists()) {
+            InputStream is = null;
+            try {
+                is = new FileInputStream("file.json");
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         // ********************************
         return ans;
     }
+
     /**
      * This static function will run your GUI using the json fime.
-     * @param json_file - a json file (e.g., G1.json - G3.gson)
      *
+     * @param json_file - a json file (e.g., G1.json - G3.gson)
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
