@@ -38,7 +38,7 @@ public class Edge implements EdgeData {
         String temp = "";
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-            if (s.charAt(i) == ',' || s.charAt(i) == ' ') {
+            if (ch != '.' && ch != ':' && (ch > '9' || ch < '0')) {
                 continue;
             }
             temp += s.charAt(i);
