@@ -1,4 +1,6 @@
-package api;
+import api.DirectedWeightedGraph;
+import api.EdgeData;
+import api.NodeData;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +16,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     }
 
     @Override
-    public api.NodeData getNode(int key) {
+    public NodeData getNode(int key) {
         if (NodeList.isEmpty())
             return null;
         return NodeList.get(key);
@@ -22,7 +24,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     }
 
     @Override
-    public void addNode(api.NodeData n) {
+    public void addNode(NodeData n) {
         for (int i = 0; i < NodeList.size(); i++) {
             if (NodeList.get(i) == n) {
                 System.out.println("The node already exist!");
@@ -32,7 +34,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     }
 
     @Override
-    public api.EdgeData getEdge(int src, int dest) {
+    public EdgeData getEdge(int src, int dest) {
         NodeList.get(src).getKey();
         NodeList.get(dest).getKey();
         return null;
@@ -44,27 +46,27 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     }
 
     @Override
-    public Iterator<api.NodeData> nodeIter() {
+    public Iterator<NodeData> nodeIter() {
         return null;
     }
 
     @Override
-    public Iterator<api.EdgeData> edgeIter() {
+    public Iterator<EdgeData> edgeIter() {
         return null;
     }
 
     @Override
-    public Iterator<api.EdgeData> edgeIter(int node_id) {
+    public Iterator<EdgeData> edgeIter(int node_id) {
         return null;
     }
 
     @Override
-    public api.NodeData removeNode(int key) {
+    public NodeData removeNode(int key) {
         return null;
     }
 
     @Override
-    public api.EdgeData removeEdge(int src, int dest) {
+    public EdgeData removeEdge(int src, int dest) {
         return null;
     }
 
