@@ -11,7 +11,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     private int edgeSize = 0;
     private List<Node> NodeList;
     private List<Edge> EdgeList;
-    private ArrayList[] g;
+    private ArrayList<Edge>[] g;
 
     public DirectedWeightedGraphC(List<NodeData> NodeL, List<EdgeData> EdgeL) {
         this.edgeSize = EdgeL.size();
@@ -27,7 +27,6 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
             this.EdgeList.add((Edge)EdgeL.get(i));
             Edge temp = this.EdgeList.get(i);
             g[temp.getSrc()].add(temp);
-//            g[temp.getSrc()].add(temp);
             g[temp.getDest()].add(temp);
         }
     }
