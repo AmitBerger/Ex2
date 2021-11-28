@@ -2,6 +2,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
+
 import java.util.*;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
@@ -22,9 +23,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public NodeData getNode(int key) {
-        if (NodeList.isEmpty())
-            return null;
-        return NodeList.get(key);
+        return (NodeList.isEmpty()) ? null : NodeList.get(key);
     }
 
     @Override
@@ -52,8 +51,8 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     public void connect(int src, int dest, double w) {
         NodeData srcNode = getNode(src);
         NodeData dstNode = getNode(dest);
-//      Assume there can be an edge from one node to itself
-        if (srcNode == null || dstNode == null){
+//      Assuming there can be an edge from one node to itself
+        if (srcNode == null || dstNode == null) {
             return;
         }
         ArrayList<Integer> givenEdgeKey = new ArrayList<Integer>();
@@ -67,12 +66,12 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return null;
+        return NodeList.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return null;
+        return EdgeList.values().iterator();
     }
 
     @Override
