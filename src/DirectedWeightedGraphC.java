@@ -2,18 +2,34 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     private int nodeSize = 0;
     private int edgeSize = 0;
-    private List<NodeData> NodeList;
-    private List<EdgeData> EdgeList;
+    private List<Node> NodeList;
+    private List<Edge> EdgeList;
+    private ArrayList[] g;
 
     public DirectedWeightedGraphC(List<NodeData> NodeL, List<EdgeData> EdgeL) {
-        this.NodeList = NodeL;
-        this.EdgeList = EdgeL;
+        this.edgeSize = EdgeL.size();
+        this.nodeSize = NodeL.size();
+        this.EdgeList = new ArrayList<Edge>();
+        this.NodeList = new ArrayList<Node>();
+        this.g = new ArrayList[nodeSize];
+        for (int i = 0; i < nodeSize; i++) {
+            this.NodeList.add((Node)NodeL.get(i));
+            g[i] = new ArrayList<Edge>();
+        }
+        for (int i = 0; i < edgeSize; i++) {
+            this.EdgeList.add((Edge)EdgeL.get(i));
+            Edge temp = this.EdgeList.get(i);
+            g[temp.getSrc()].add(temp);
+//            g[temp.getSrc()].add(temp);
+            g[temp.getDest()].add(temp);
+        }
     }
 
     @Override
@@ -32,7 +48,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
             }
         }
         nodeSize++;
-        NodeList.add(n);
+        NodeList.add((Node) n);
     }
 
     @Override
@@ -49,6 +65,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
+
         return null;
     }
 
