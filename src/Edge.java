@@ -4,13 +4,13 @@ public class Edge implements EdgeData {
     private int src = 0;
     private int dst = 0;
     private double wgt = 0;
-    private int tag = 0;
+    private int tag;
 
-    public Edge(int s, int d, double w, int t) {
+    public Edge(int s, int d, double w) {
         this.src = s;
         this.dst = d;
         this.wgt = w;
-        this.tag = t;
+        this.tag = 0;
     }
 
     @Override

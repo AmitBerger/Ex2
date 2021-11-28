@@ -2,33 +2,22 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
-    private int nodeSize = 0;
-    private int edgeSize = 0;
-    private List<Node> NodeList;
-    private List<Edge> EdgeList;
-    private ArrayList<Edge>[] g;
 
-    public DirectedWeightedGraphC(List<NodeData> NodeL, List<EdgeData> EdgeL) {
-        this.edgeSize = EdgeL.size();
-        this.nodeSize = NodeL.size();
-        this.EdgeList = new ArrayList<Edge>();
-        this.NodeList = new ArrayList<Node>();
-        this.g = new ArrayList[nodeSize];
-        for (int i = 0; i < nodeSize; i++) {
-            this.NodeList.add((Node)NodeL.get(i));
-            g[i] = new ArrayList<Edge>();
-        }
-        for (int i = 0; i < edgeSize; i++) {
-            this.EdgeList.add((Edge)EdgeL.get(i));
-            Edge temp = this.EdgeList.get(i);
-            g[temp.getSrc()].add(temp);
-            g[temp.getDest()].add(temp);
-        }
+    private HashMap<Integer, NodeData> NodeList;
+    private HashMap<ArrayList<Integer>, EdgeData> EdgeList;
+    private int nodeSize;
+    private int edgeSize;
+    private int mc;
+
+    public DirectedWeightedGraphC() {
+        this.NodeList = new HashMap<>();
+        this.EdgeList = new HashMap<>();
+        this.nodeSize = 0;
+        this.edgeSize = 0;
+        this.mc = 0;
     }
 
     @Override
@@ -40,31 +29,44 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public void addNode(NodeData n) {
-        for (int i = 0; i < NodeList.size(); i++) {
-            if (NodeList.get(i).getKey() == n.getKey()) {
-                System.out.println("The node already exist!");
-                return;
-            }
+
+        if (NodeList.containsKey(n.getKey())) {
+            NodeList.replace(n.getKey(), n);
+        } else {
+            NodeList.put(n.getKey(), n);
+            nodeSize++;
         }
-        nodeSize++;
-        NodeList.add((Node) n);
+        mc++;
     }
+
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        NodeList.get(src).getKey();
-        NodeList.get(dest).getKey();
-        return null;
+        ArrayList<Integer> requestedEdge = new ArrayList<Integer>();
+        requestedEdge.add(src);
+        requestedEdge.add(dest);
+        return EdgeList.getOrDefault(requestedEdge, null);
     }
 
     @Override
     public void connect(int src, int dest, double w) {
-
+        NodeData srcNode = getNode(src);
+        NodeData dstNode = getNode(dest);
+//      Assume there can be an edge from one node to itself
+        if (srcNode == null || dstNode == null){
+            return;
+        }
+        ArrayList<Integer> givenEdgeKey = new ArrayList<Integer>();
+        givenEdgeKey.add(src);
+        givenEdgeKey.add(dest);
+        Edge givenEdge = new Edge(src, dest, w);
+        EdgeList.put(givenEdgeKey, givenEdge);
+        edgeSize++;
+        mc++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-
         return null;
     }
 
