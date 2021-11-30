@@ -1,12 +1,13 @@
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
+
 import java.util.*;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     HashMap<Integer, NodeData> nodeList;
-    HashMap<ArrayList<Integer>, EdgeData> edgeList;
+    HashMap<Integer, HashMap<NodeData, EdgeData>> edgeList;
     private int nodeSize;
     private int edgeSize;
     private int mc;
@@ -20,35 +21,29 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     }
 
     public DirectedWeightedGraphC(DirectedWeightedGraphC g) {
-        for (NodeData n: g.nodeList.values()) {
+        for (NodeData n : g.nodeList.values()) {
             this.nodeList.put(n.getKey(), new Node(n));
-            for (EdgeData e: g.edgeList.values()) {
-                ArrayList<Integer> currentKey = new ArrayList<>();
-                currentKey.add(e.getSrc());
-                currentKey.add(e.getDest());
-                this.edgeList.put(currentKey,e);
+            this.nodeSize++;
+
+            for (HashMap<NodeData,EdgeData> h : g.edgeList.values()) {
+                this.edgeList.put(n.getKey(),h);
+                this.edgeSize++;
             }
         }
-        this.nodeSize = g.nodeSize;
-        this.edgeSize = g.edgeSize;
         this.mc = g.getMC();
     }
 
     @Override
-    public NodeData getNode(int key)
-    {
+    public NodeData getNode(int key) {
         return (nodeList.isEmpty()) ? null : nodeList.get(key);
     }
 
     @Override
     public void addNode(NodeData n) {
 
-        if (nodeList.containsKey(n.getKey()))
-        {
+        if (nodeList.containsKey(n.getKey())) {
             nodeList.replace(n.getKey(), n);
-        }
-        else
-        {
+        } else {
             nodeList.put(n.getKey(), n);
             nodeSize++;
         }
@@ -57,28 +52,24 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        ArrayList<Integer> requestedEdge = new ArrayList<>();
-        requestedEdge.add(src);
-        requestedEdge.add(dest);
-        return edgeList.getOrDefault(requestedEdge, null);
+        NodeData srcNode = getNode(src);
+        return this.edgeList.get(srcNode.getKey()).get(srcNode);
     }
 
     @Override
     public void connect(int src, int dest, double w) {
 
-        ArrayList<Integer> givenEdgeKey = new ArrayList<>();
-        givenEdgeKey.add(src);
-        givenEdgeKey.add(dest);
-
         NodeData srcNode = getNode(src);
         NodeData dstNode = getNode(dest);
+        Edge givenEdge = new Edge(src, dest, w);
 //      Assuming there can be an edge from one node to itself
-        if (srcNode == null || dstNode == null)
-        {
+        if (srcNode == null || dstNode == null) {
             return;
         }
-        Edge givenEdge = new Edge(src, dest, w);
-        edgeList.put(givenEdgeKey, givenEdge);
+        HashMap<NodeData,EdgeData> newEdge = new HashMap<>();
+        newEdge.put(srcNode,givenEdge);
+        this.edgeList.put(srcNode.getKey(), newEdge);
+        edgeList.put(dstNode.getKey(), newEdge);
         edgeSize++;
         mc++;
     }
@@ -90,7 +81,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return edgeList.values().iterator();
+        return this.edgeList.get(0).values().iterator();                    // mistake needs to be treated
     }
 
     @Override
@@ -109,12 +100,10 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        ArrayList<Integer> needToBeRemoved = new ArrayList<>();
-        needToBeRemoved.add(src);
-        needToBeRemoved.add(dest);
         this.edgeSize--;
         this.mc++;
-        return this.edgeList.remove(needToBeRemoved);
+        this.edgeList.get(src).remove(this.nodeList.get(src));
+        return this.edgeList.get(dest).remove(this.nodeList.get(dest));
     }
 
     @Override
