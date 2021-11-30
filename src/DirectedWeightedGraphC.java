@@ -11,12 +11,27 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
     private int edgeSize;
     private int mc;
 
-    public DirectedWeightedGraphC(DirectedWeightedGraphC g) {
-        this.edgeList = g.edgeList;
-        this.nodeList = g.nodeList;
+    public DirectedWeightedGraphC() {
+        nodeList = new HashMap<>();
+        edgeList = new HashMap<>();
         this.nodeSize = 0;
         this.edgeSize = 0;
         this.mc = 0;
+    }
+
+    public DirectedWeightedGraphC(DirectedWeightedGraphC g) {
+        for (NodeData n: g.nodeList.values()) {
+            this.nodeList.put(n.getKey(), new Node(n));
+            for (EdgeData e: g.edgeList.values()) {
+                ArrayList<Integer> currentKey = new ArrayList<>();
+                currentKey.add(e.getSrc());
+                currentKey.add(e.getDest());
+                this.edgeList.put(currentKey,e);
+            }
+        }
+        this.nodeSize = g.nodeSize;
+        this.edgeSize = g.edgeSize;
+        this.mc = g.getMC();
     }
 
     @Override

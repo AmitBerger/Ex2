@@ -26,6 +26,17 @@ public class Node implements NodeData {
         fromMeEdges = new HashMap<>();
         towardsMeEdges = new HashMap<>();
     }
+    public Node(NodeData n) {
+
+        this.key = n.getKey();
+        this.weight = n.getWeight();
+        this.tag = n.getTag();
+        this.info = n.getLocation().x()+ "," + n.getLocation().y();
+        this.geo = (Location) n.getLocation();
+        Edges = new HashMap<>();
+        fromMeEdges = new HashMap<>();
+        towardsMeEdges = new HashMap<>();
+    }
 
     public EdgeData getNodeEdge(int key) {
         EdgeData desiredNode = Edges.get(key);

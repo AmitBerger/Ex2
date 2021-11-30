@@ -2,26 +2,45 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class DirectedWeightedGraphAlgorithmsC implements DirectedWeightedGraphAlgorithms {
+
+    DirectedWeightedGraphC graph;
+
+    public DirectedWeightedGraphAlgorithmsC() {
+        this.graph = new DirectedWeightedGraphC();
+    }
+
     @Override
     public void init(DirectedWeightedGraph g) {
-
+        this.graph = (DirectedWeightedGraphC) g;
     }
 
     @Override
     public DirectedWeightedGraph getGraph() {
-        return null;
+        return this.graph;
     }
 
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+        return (DirectedWeightedGraph) new DirectedWeightedGraphC(this.graph);
     }
 
     @Override
     public boolean isConnected() {
+        if (this.graph.nodeSize() < 0) {
+            return false;
+        } else if (this.graph.nodeSize() == 0 || this.graph.nodeSize() == 1) {
+            return true;
+        }
+        for (int i = 0; i < this.graph.nodeSize(); i++) {
+            this.graph.nodeList.get(i).setTag(0);
+        }
+        Queue<NodeData> queue = new LinkedList<>();
+
         return false;
     }
 
