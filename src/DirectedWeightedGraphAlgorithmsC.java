@@ -57,7 +57,7 @@ public class DirectedWeightedGraphAlgorithmsC implements DirectedWeightedGraphAl
         NodeQueue.add(this.graph.nodeList.get(0));
         while (!NodeQueue.isEmpty()) {
             NodeData currentNode = NodeQueue.remove();
-            for (NodeData n: this.graph.edgeList.get(currentNode.getKey()).keySet()) {
+            for (NodeData n : this.graph.edgeList.get(currentNode.getKey()).keySet()) {
                 NodeQueue.add(n);
                 n.setTag(IsConnected);
             }
@@ -97,32 +97,31 @@ public class DirectedWeightedGraphAlgorithmsC implements DirectedWeightedGraphAl
                 shortestPath = allPaths[i];
             }
         }
-        return (shortestPath == 0)? -1 : shortestPath;
-    }
-        @Override
-        public List<NodeData> shortestPath ( int src, int dest){
-            return null;
-        }
-
-        @Override
-        public NodeData center () {
-            return null;
-        }
-
-        @Override
-        public List<NodeData> tsp (List < NodeData > cities) {
-            return null;
-        }
-
-        @Override
-        public boolean save (String file){
-            return false;
-        }
-
-        @Override
-        public boolean load (String file){
-            return false;
-        }
+        return (shortestPath == 0) ? -1 : shortestPath;
     }
 
+    @Override
+    public List<NodeData> shortestPath(int src, int dest) {
+        return null;
+    }
+
+    @Override
+    public NodeData center() {
+        return null;
+    }
+
+    @Override
+    public List<NodeData> tsp(List<NodeData> cities) {
+        return null;
+    }
+
+    @Override
+    public boolean save(String file) {
+        return false;
+    }
+
+    @Override
+    public boolean load(String file) {
+        return false;
+    }
 }
