@@ -5,39 +5,31 @@ import api.NodeData;
 import java.util.HashMap;
 
 public class Node implements NodeData {
-    private static int id = 0;
+
     private int key;
     private double weight;
     private int tag;
     private String info;
     private Location geo;
-    public HashMap<Integer, EdgeData> outGoingEdges;
-    public HashMap<Integer, EdgeData> inComingEdges;
+    HashMap<Integer, EdgeData> Edges;
+    HashMap<Integer, EdgeData> towardsMeEdges;
+    HashMap<Integer, EdgeData> fromMeEdges;
 
     public Node(int key, Location geo) {
-        id++;
+
         this.key = key;
         this.weight = 0;
         this.tag = 0;
-        this.info = "";
+        this.info = geo.x()+ "," + geo.y();
         this.geo = geo;
-        outGoingEdges = new HashMap<>();
-        inComingEdges = new HashMap<>();
-
-
+        Edges = new HashMap<>();
+        fromMeEdges = new HashMap<>();
+        towardsMeEdges = new HashMap<>();
     }
 
     public EdgeData getNodeEdge(int key) {
-        EdgeData e = inComingEdges.get(key);
-        EdgeData e1 = outGoingEdges.get(key);
-        EdgeData ans = null;
-        if (e != null) {
-            ans = e;
-        }
-        if (e1 != null) {
-            ans = e1;
-        }
-        return ans;
+        EdgeData desiredNode = Edges.get(key);
+        return desiredNode;
     }
 
     public Node(int id, String pos) {
@@ -64,8 +56,8 @@ public class Node implements NodeData {
     }
 
     @Override
-    public void setWeight(double w) {
-        this.weight = w;
+    public int getTag() {
+        return this.tag;
     }
 
     @Override
@@ -74,18 +66,27 @@ public class Node implements NodeData {
     }
 
     @Override
+    public void setWeight(double w) {
+        this.weight = w;
+    }
+
+    @Override
     public void setInfo(String s) {
         this.info = s;
     }
 
     @Override
-    public int getTag() {
-        return this.tag;
-    }
-
-    @Override
     public void setTag(int t) {
         this.tag = t;
+    }
 
+    public void addEdge(Edge e, Boolean fromMe){
+        if (fromMe){
+            this.fromMeEdges.put(this.fromMeEdges.size(),e);
+        }
+        else{
+            this.towardsMeEdges.put(this.towardsMeEdges.size(),e);
+        }
+        this.Edges.put(this.Edges.size(),e);
     }
 }

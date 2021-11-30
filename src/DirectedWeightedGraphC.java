@@ -1,108 +1,119 @@
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
-
-
 import java.util.*;
 
 public class DirectedWeightedGraphC implements DirectedWeightedGraph {
 
-    private HashMap<Integer, NodeData> NodeList;
-    private HashMap<ArrayList<Integer>, EdgeData> EdgeList;
+    HashMap<Integer, NodeData> nodeList;
+    HashMap<ArrayList<Integer>, EdgeData> edgeList;
     private int nodeSize;
     private int edgeSize;
     private int mc;
 
-    public DirectedWeightedGraphC() {
-        this.NodeList = new HashMap<>();
-        this.EdgeList = new HashMap<>();
+    public DirectedWeightedGraphC(DirectedWeightedGraphC g) {
+        this.edgeList = g.edgeList;
+        this.nodeList = g.nodeList;
         this.nodeSize = 0;
         this.edgeSize = 0;
         this.mc = 0;
     }
 
     @Override
-    public NodeData getNode(int key) {
-        return (NodeList.isEmpty()) ? null : NodeList.get(key);
+    public NodeData getNode(int key)
+    {
+        return (nodeList.isEmpty()) ? null : nodeList.get(key);
     }
 
     @Override
     public void addNode(NodeData n) {
 
-        if (NodeList.containsKey(n.getKey())) {
-            NodeList.replace(n.getKey(), n);
-        } else {
-            NodeList.put(n.getKey(), n);
+        if (nodeList.containsKey(n.getKey()))
+        {
+            nodeList.replace(n.getKey(), n);
+        }
+        else
+        {
+            nodeList.put(n.getKey(), n);
             nodeSize++;
         }
         mc++;
     }
 
-
     @Override
     public EdgeData getEdge(int src, int dest) {
-        ArrayList<Integer> requestedEdge = new ArrayList<Integer>();
+        ArrayList<Integer> requestedEdge = new ArrayList<>();
         requestedEdge.add(src);
         requestedEdge.add(dest);
-        return EdgeList.getOrDefault(requestedEdge, null);
+        return edgeList.getOrDefault(requestedEdge, null);
     }
 
     @Override
     public void connect(int src, int dest, double w) {
+
+        ArrayList<Integer> givenEdgeKey = new ArrayList<>();
+        givenEdgeKey.add(src);
+        givenEdgeKey.add(dest);
+
         NodeData srcNode = getNode(src);
         NodeData dstNode = getNode(dest);
 //      Assuming there can be an edge from one node to itself
-        if (srcNode == null || dstNode == null) {
+        if (srcNode == null || dstNode == null)
+        {
             return;
         }
-        ArrayList<Integer> givenEdgeKey = new ArrayList<Integer>();
-        givenEdgeKey.add(src);
-        givenEdgeKey.add(dest);
         Edge givenEdge = new Edge(src, dest, w);
-        EdgeList.put(givenEdgeKey, givenEdge);
+        edgeList.put(givenEdgeKey, givenEdge);
         edgeSize++;
         mc++;
     }
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return NodeList.values().iterator();
+        return nodeList.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return EdgeList.values().iterator();
+        return edgeList.values().iterator();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return null;
+        Node desiredNode = (Node) nodeList.get(node_id);
+        return desiredNode.Edges.values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-        return null;
+        this.nodeSize--;
+        this.mc++;
+//      The remove func returns null if the object is not found
+        return this.nodeList.remove(key);
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        return null;
+        ArrayList<Integer> needToBeRemoved = new ArrayList<>();
+        needToBeRemoved.add(src);
+        needToBeRemoved.add(dest);
+        this.edgeSize--;
+        this.mc++;
+        return this.edgeList.remove(needToBeRemoved);
     }
 
     @Override
     public int nodeSize() {
-        return NodeList.size();
+        return nodeList.size();
     }
 
     @Override
     public int edgeSize() {
-        return EdgeList.size();
+        return edgeList.size();
     }
 
     @Override
     public int getMC() {
-        return 0;
+        return this.mc;
     }
-
-
 }
