@@ -14,21 +14,30 @@ public class MyDWG implements DirectedWeightedGraph {
     private int mc;
 
     public MyDWG() {
-        nodeList = new HashMap<>();
-        edgeList = new HashMap<>();
+        this.nodeList = new HashMap<>();
+        this.edgeList = new HashMap<>();
         this.nodeSize = 0;
         this.edgeSize = 0;
         this.mc = 0;
     }
 
-    public MyDWG(MyDWG g) {
-        for (int node : g.nodeList.keySet()) {
-            addNode(g.nodeList.get(node));
+    public MyDWG(DirectedWeightedGraph g) {
+        this.nodeList = new HashMap<>();
+        this.edgeList = new HashMap<>();
+        Iterator<NodeData> nodeIter = g.nodeIter();
+        Iterator<EdgeData> edgeIter = g.edgeIter();
+        while (nodeIter.hasNext()){
+            NodeData currentNode = nodeIter.next();
+            this.nodeList.put(currentNode.getKey(),currentNode);
+            HashMap<Integer,EdgeData> currEdgeHash = new HashMap<>();
+            this.edgeList.put(currentNode.getKey(),currEdgeHash);
         }
-        for (int node : g.edgeList.keySet()) {
-            this.edgeList.put(node, g.edgeList.get(node));
-            this.edgeSize++;
+        while (edgeIter.hasNext()){
+            EdgeData currentEdge = edgeIter.next();
+            this.edgeList.get(currentEdge.getSrc()).put(currentEdge.getDest(),currentEdge);
         }
+        this.edgeSize = g.edgeSize();
+        this.nodeSize = g.nodeSize();
         this.mc = g.getMC();
     }
 
@@ -45,26 +54,22 @@ public class MyDWG implements DirectedWeightedGraph {
             nodeSize++;
             mc++;
         }
-//        else {
-//            removeNode(n.getKey());
-//            this.nodeList.put(n.getKey(),n);
-//        }
     }
+/*
+    public void addEdge(EdgeData e) {
 
-//    public void addEdge(EdgeData e) {
-//
-//        if (!this.edgeList.containsKey(e)) {
-//            HashMap<Integer,EdgeData> h = new HashMap<>();
-//            h.put(e.getDest(),e);
-//            this.edgeList.put(e.getSrc(),h);
-//            this.edgeSize++;
-//        }
-//        else{
-//            this.edgeList.get(e.getSrc()).put(e.getDest(),e);
-//        }
-//        mc++;
-//    }
-
+        if (!this.edgeList.containsKey(e)) {
+            HashMap<Integer,EdgeData> h = new HashMap<>();
+            h.put(e.getDest(),e);
+            this.edgeList.put(e.getSrc(),h);
+            this.edgeSize++;
+        }
+        else{
+            this.edgeList.get(e.getSrc()).put(e.getDest(),e);
+        }
+        mc++;
+    }
+*/
     @Override
     public EdgeData getEdge(int src, int dest) {
         return this.edgeList.get(src).get(dest);
