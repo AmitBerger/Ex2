@@ -18,6 +18,7 @@ public class DirectedWeightedGraphC implements DirectedWeightedGraph {
         this.nodeSize = 0;
         this.edgeSize = 0;
         this.mc = 0;
+
     }
 
     public DirectedWeightedGraphC(DirectedWeightedGraphC g) {

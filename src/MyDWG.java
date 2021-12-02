@@ -5,7 +5,7 @@ import api.NodeData;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class myDWG implements DirectedWeightedGraph {
+public class MyDWG implements DirectedWeightedGraph {
 
     HashMap<Integer, NodeData> nodeList;
     HashMap<Integer, HashMap<Integer, EdgeData>> edgeList;
@@ -13,7 +13,7 @@ public class myDWG implements DirectedWeightedGraph {
     private int edgeSize;
     private int mc;
 
-    public myDWG() {
+    public MyDWG() {
         nodeList = new HashMap<>();
         edgeList = new HashMap<>();
         this.nodeSize = 0;
@@ -21,7 +21,7 @@ public class myDWG implements DirectedWeightedGraph {
         this.mc = 0;
     }
 
-    public myDWG(myDWG g) {
+    public MyDWG(MyDWG g) {
         for (int node : g.nodeList.keySet()) {
             addNode(g.nodeList.get(node));
         }
@@ -45,25 +45,25 @@ public class myDWG implements DirectedWeightedGraph {
             nodeSize++;
             mc++;
         }
-        else {
-            removeNode(n.getKey());
-            this.nodeList.put(n.getKey(),n);
-        }
+//        else {
+//            removeNode(n.getKey());
+//            this.nodeList.put(n.getKey(),n);
+//        }
     }
 
-    public void addEdge(EdgeData e) {
-
-        if (!this.edgeList.containsKey(e)) {
-            HashMap<Integer,EdgeData> h = new HashMap<>();
-            h.put(e.getDest(),e);
-            this.edgeList.put(e.getSrc(),h);
-            this.edgeSize++;
-        }
-        else{
-            this.edgeList.get(e.getSrc()).put(e.getDest(),e);
-        }
-        mc++;
-    }
+//    public void addEdge(EdgeData e) {
+//
+//        if (!this.edgeList.containsKey(e)) {
+//            HashMap<Integer,EdgeData> h = new HashMap<>();
+//            h.put(e.getDest(),e);
+//            this.edgeList.put(e.getSrc(),h);
+//            this.edgeSize++;
+//        }
+//        else{
+//            this.edgeList.get(e.getSrc()).put(e.getDest(),e);
+//        }
+//        mc++;
+//    }
 
     @Override
     public EdgeData getEdge(int src, int dest) {
@@ -105,12 +105,12 @@ public class myDWG implements DirectedWeightedGraph {
     @Override
     public NodeData removeNode(int key) {
 
-        this.edgeList.remove(key);
         for (int node : this.edgeList.keySet()) {
             if (this.edgeList.get(node).containsKey(key)) {
                 this.edgeList.get(node).remove(key);
             }
         }
+        this.edgeList.remove(key);
         this.nodeSize--;
         this.mc++;
 //      The remove func returns null if the object is not found
