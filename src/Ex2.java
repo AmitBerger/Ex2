@@ -1,20 +1,15 @@
-import api.DirectedWeightedGraph;
-import api.DirectedWeightedGraphAlgorithms;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import api.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+
+import java.io.*;
+import java.util.Locale;
+
+import java.util.Iterator;
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
  */
@@ -25,21 +20,29 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    public static DirectedWeightedGraph getGrapg(String json_file){
-        DirectedWeightedGraph ans = null;
-        JSONParser jsonParser = new JSONParser();
-
-        try (FileReader reader = new FileReader("json_file"))
+    public static DirectedWeightedGraph getGrapg(String json_file) throws IOException, ParseException {
+        DirectedWeightedGraph ans = new DirectedWeightedGraphC();
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(new FileReader(json_file));
+        JSONObject jobj =(JSONObject) obj;
+        JSONArray edges = (JSONArray) jobj.get("Edges");
+        JSONArray nodes = (JSONArray) jobj.get("Nodes");
+        for (Object o:nodes)
         {
-            //Read JSON file
-            Object obj = jsonParser.parse(reader);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            JSONObject temp = (JSONObject) o;
+            Node n = new Node(Integer.parseInt(temp.get("id").toString()),temp.get("pos").toString());
+            ans.addNode(n);
+        }
+        for (Object o:edges)
+        {
+            JSONObject temp = (JSONObject) o;
+            if((temp.get("src")!=null) && temp.get("dest")!=null && temp.get("w")!=null)
+            {
+                int src = Integer.parseInt(temp.get("src").toString());
+                int dst = Integer.parseInt(temp.get("dest").toString());
+                double w =Double.parseDouble(temp.get("w").toString());
+                ans.connect(src,dst,w);
+            }
         }
         return ans;
     }
