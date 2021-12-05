@@ -27,6 +27,9 @@ public class MyDWG implements DirectedWeightedGraph {
     public HashMap<Integer, HashMap<Integer, EdgeData>> getEdgeList(){
         return this.edgeList;
     }
+    public HashMap<Integer, EdgeData> getSpecificNodeEdges(int nodeKey){
+        return this.edgeList.get(nodeKey);
+    }
 
     public MyDWG() {
         this.nodeList = new HashMap<>();

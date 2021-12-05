@@ -9,8 +9,8 @@ public class Iterators {
 
     public static class NodeIterator implements Iterator<NodeData> {
 
-        private MyDWG graph;
-        private int currentPos;
+        MyDWG graph;
+        int currentPos;
 
         public NodeIterator(MyDWG g) {
             this.graph = g;
@@ -64,7 +64,7 @@ public class Iterators {
         @Override
         public EdgeData next() {
             EdgeData ans = null;
-            if (currentSrcPos < this.graph.nodeSize()){
+            if (currentSrcPos < this.graph.nodeSize()) {
                 ans = edges.get(currentSrcPos).get(currentDstPos++);
                 if (!edges.get(currentSrcPos).containsKey(currentDstPos + 1)) {
                     currentSrcPos++;
@@ -80,7 +80,7 @@ public class Iterators {
         }
 
         public void remove(EdgeData e) {
-            this.graph.removeEdge(e.getSrc(),e.getDest());
+            this.graph.removeEdge(e.getSrc(), e.getDest());
         }
 
         @Override
@@ -95,26 +95,29 @@ public class Iterators {
         MyDWG graph;
         int currentPos;
         int NodeKey;
+        HashMap<Integer, EdgeData> edges;
 
         public SpesificEdgeIterator(MyDWG g, int nodeKey) {
             this.graph = g;
             this.currentPos = 0;
             this.NodeKey = nodeKey;
+            this.edges = g.getSpecificNodeEdges(nodeKey);
+
         }
 
         @Override
         public boolean hasNext() {
-            return currentPos < (this.graph.edgeSize() - 1);
+            return currentPos < (this.edges.size() - 1);
         }
 
         @Override
         public EdgeData next() {
-            return this.graph.getEdge(NodeKey, currentPos++);
+            return this.edges.get(currentPos++);
         }
 
         @Override
         public void remove() {
-            remove(this.graph.getEdge(NodeKey, currentPos));
+            remove(this.edges.get(currentPos));
         }
 
         public void remove(EdgeData e) {
