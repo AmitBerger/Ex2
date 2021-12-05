@@ -154,7 +154,38 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public NodeData center() {
-        return null;
+        // if the graph in not strongly connected -> return null
+        if (!this.isConnected()) {
+            return null;
+        }
+        double min_max_SP = Integer.MAX_VALUE;
+        int chosenNode = -1;
+        Iterator<NodeData> iter = this.graph.nodeIter();
+        while(iter.hasNext()){
+            int node = iter.next().getKey();
+            // find the maximum shortest path for each node
+            double max_SP = maxShortestPath(node);
+            if(max_SP < min_max_SP){
+                min_max_SP = max_SP;
+                chosenNode = node;
+            }
+        }
+        // return the node with the minimized maximum shortest path
+        return this.graph.getNode(chosenNode);
+    }
+
+    private double maxShortestPath(int src){
+        double maxS_P = 0;
+        Iterator<NodeData> iter = this.graph.nodeIter();
+        while(iter.hasNext()){
+            NodeData N = iter.next();
+            if (N.getKey() != src) {
+                double S_P = this.shortestPathDist(src, N.getKey());
+                if (S_P > maxS_P)
+                    maxS_P = S_P;
+            }
+        }
+        return maxS_P;
     }
 
     @Override
