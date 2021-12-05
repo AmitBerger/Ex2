@@ -4,7 +4,6 @@ import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 
-import java.io.*;
 import java.util.*;
 
 public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
@@ -122,7 +121,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     Step 1: Build a structure which stores the distance to each node and set it all to infinity.
     Step 2: Create a priority queue and add the src node and change its distance to zero.
     Step 3: While queue is not empty, poll a node.
-    Step4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
+    Step 4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
            distance(this node, current neighbour)] < (current distance to current neighbour).
            If true, update the (current neighbour distance from src to it) to the new value.
     Meaning, in the end all the nodes will contain the shortest path from src to them.
@@ -283,7 +282,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("G1.json");
+        g.load("data/G1.json");
     }
 }
 
