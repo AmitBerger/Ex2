@@ -100,4 +100,11 @@ public class Node implements NodeData {
         }
         this.Edges.put(this.Edges.size(),e);
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "key=" + key +
+                '}';
+    }
 }

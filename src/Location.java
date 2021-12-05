@@ -33,4 +33,13 @@ public class Location implements GeoLocation {
         double min_y = (this.y < g.y())? this.y : g.y();
         return Math.sqrt(Math.pow((max_x - min_x),2) + Math.pow((max_y - min_y),2));
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

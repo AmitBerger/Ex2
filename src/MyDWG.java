@@ -55,7 +55,7 @@ public class MyDWG implements DirectedWeightedGraph {
             mc++;
         }
     }
-/*
+
     public void addEdge(EdgeData e) {
 
         if (!this.edgeList.containsKey(e)) {
@@ -69,7 +69,7 @@ public class MyDWG implements DirectedWeightedGraph {
         }
         mc++;
     }
-*/
+
     @Override
     public EdgeData getEdge(int src, int dest) {
         return this.edgeList.get(src).get(dest);
@@ -144,4 +144,16 @@ public class MyDWG implements DirectedWeightedGraph {
     public int getMC() {
         return this.mc;
     }
+
+    @Override
+    public String toString() {
+        return "MyDWG{" +
+                "nodeList=" + nodeList +
+                ", edgeList=" + edgeList +
+                ", nodeSize=" + nodeSize +
+                ", edgeSize=" + edgeSize +
+                ", mc=" + mc +
+                '}';
+    }
 }
+
