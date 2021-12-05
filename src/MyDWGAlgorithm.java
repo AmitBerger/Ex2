@@ -115,9 +115,19 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return newGrph;
     }
 
-    /* https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+/*  The Idea for this function is based on the Dijkstra's algorithm.
+    Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
+    Mission -> Find the shortest path between given src and dest nodes;
+    It runs as follows :
+    Step 1: Build a structure which stores the distance to each node and set it all to infinity.
+    Step 2: Create a priority queue and add the src node and change its distance to zero.
+    Step 3: While queue is not empty, poll a node.
+    Step4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
+           distance(this node, current neighbour)] < (current distance to current neighbour).
+           If true, update the (current neighbour distance from src to it) to the new value.
+    Meaning, in the end all the nodes will contain the shortest path from src to them.
+    Last, return the distance to dest.
  */
-
     @Override
     public double shortestPathDist(int src, int dest) {              // in progress
         if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
@@ -156,9 +166,60 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         double shortestPath = dist.get(dest);
         return (shortestPath == 0.0) ? -1 : shortestPath;
     }
+/*
+    The Idea for this function is also based on the Dijkstra's algorithm.
+    Mission -> return the list of nodes which represent the shortest path from a given src node to the given dest.
+    Implementation -> same as shortestPathDist, only now we for each node we saved a list of nodes from src to it,
+                      which updates as well.
+    Last, return the dest list.
+ */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        return null;
+        if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
+            return null;
+        }
+        List<NodeData> nodeFromSrcToDst = new ArrayList<>();
+        if (src == dest){
+            nodeFromSrcToDst.add(this.graph.getNode(src));
+            return nodeFromSrcToDst;
+        }
+        HashMap<Integer,List<NodeData>> nodesList = new HashMap<>();
+        HashMap<Integer,Double> dist = new HashMap<>();
+        Iterator<NodeData> nodeIter = this.graph.nodeIter();
+        while (nodeIter.hasNext()){
+            NodeData node = nodeIter.next();
+            dist.put(node.getKey(),Double.MAX_VALUE);
+            nodesList.put(node.getKey(),new LinkedList<>());
+        }
+        // Created a priority queue which gets the src node at first and all its valid paths
+        Queue<NodeData> NodeQueue = new PriorityQueue<>();
+        NodeData srcNode = this.graph.getNode(src);
+        NodeQueue.add(srcNode);
+        dist.put(srcNode.getKey(),0.0);
+
+        while (!NodeQueue.isEmpty()){
+            NodeData polledNode = NodeQueue.poll();
+            // List of nodes from the polled Node containing the nodes from src to the current polled node.
+            List<NodeData> currentNodeMinList = new LinkedList<>(nodesList.get(polledNode.getKey()));
+            // Iterator that runs throw all the neighbours of the polled node.
+            Iterator<EdgeData> edgeIter = this.graph.edgeIter(polledNode.getKey());
+            while (edgeIter.hasNext()) {
+                EdgeData edgeBetweenCurrentNeighbours = edgeIter.next();
+                NodeData dstNode = this.graph.getNode(edgeBetweenCurrentNeighbours.getDest());
+                double edgeWeight = edgeBetweenCurrentNeighbours.getWeight();
+                double currentSrcWeight = dist.get(polledNode.getKey());
+                double currentNeighbourWeight = dist.get(dstNode.getKey());
+                double neighbourNewWeight = edgeWeight + currentSrcWeight;
+                if (currentNeighbourWeight > neighbourNewWeight){
+                    // If we got here it means the current min dist and Lst of nodes are about to be updated
+                    dist.put(dstNode.getKey(),neighbourNewWeight);
+                    NodeQueue.add(dstNode);
+                    currentNodeMinList.add(dstNode);
+                    nodesList.put(dstNode.getKey(),currentNodeMinList);
+                }
+            }
+        }
+        return nodesList.get(dest);
     }
 
     @Override
