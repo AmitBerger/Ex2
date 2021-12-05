@@ -12,6 +12,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
     int IsConnected = 1;
     int NotYetConnected = 0;
+    int Infinity = Integer.MAX_VALUE;
 
     public MyDWGAlgorithm() {
         this.graph = new MyDWG();
@@ -66,6 +67,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         } else if (g.nodeSize() == 0 || g.nodeSize() == 1) {
             return true;
         }
+        setAllTags(g,0);
         Queue<NodeData> NodeQueue = new LinkedList<>();
         Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
@@ -115,49 +117,45 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     /* https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
  */
+
     @Override
     public double shortestPathDist(int src, int dest) {              // in progress
-        if (this.graph.nodeSize() < 2) {
+        if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
             return -1;
         }
-        HashMap<Integer, Double> allPaths = new HashMap<>();
-        Queue<NodeData> NodeQueue = new LinkedList<>();
-     /* The next line is legal because in the beginning we confirmed that our graph nodeSize > 1.
-        Started with first element of the nodeList because, there is no preference to start with a specific node */
+        if (src == dest){
+            return 0;
+        }
+        HashMap<Integer,Double> dist = new HashMap<>();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
-        while (nodeIter.hasNext()) {
-            NodeData n = nodeIter.next();
-            n.setTag(NotYetConnected);
-            allPaths.put(n.getKey(), 0.0);
+        while (nodeIter.hasNext()){
+            NodeData node = nodeIter.next();
+            dist.put(node.getKey(),Double.MAX_VALUE);
         }
-//     The next line is legal because in the beginning we confirmed that our graph nodeSize > 1.
-//     In addition, it doesn't meter which node will be the starting one.
-        NodeQueue.add(this.graph.getNode(src));
-        while (!NodeQueue.isEmpty()) {
-            NodeData currentNode = NodeQueue.remove();
-            boolean flag = false;
+        Queue<NodeData> NodeQueue = new PriorityQueue<>();
+        NodeData srcNode = this.graph.getNode(src);
+        NodeQueue.add(srcNode);
+        dist.put(srcNode.getKey(),0.0);
 
-            Iterator<EdgeData> edgeIter = this.graph.edgeIter(currentNode.getKey());
-            while (edgeIter.hasNext() && !flag) {
-                EdgeData currentEdge = edgeIter.next();
-                NodeData currentEdgeNode = this.graph.getNode(currentEdge.getDest());
-                NodeQueue.add(currentEdgeNode);
-                Double currentWight = allPaths.get(currentEdgeNode.getKey());
-                allPaths.put(currentNode.getKey(), (currentWight + currentEdge.getWeight()));
-                flag = (currentEdgeNode.getKey() == dest);
-                currentEdgeNode.setTag(IsConnected);
+        while (!NodeQueue.isEmpty()){
+            NodeData currentSrcNode = NodeQueue.poll();
+            Iterator<EdgeData> edgeIter = this.graph.edgeIter(currentSrcNode.getKey());
+            while (edgeIter.hasNext()) {
+                EdgeData edgeBetweenCurrentNeighbours = edgeIter.next();
+                NodeData dstNode = this.graph.getNode(edgeBetweenCurrentNeighbours.getDest());
+                double edgeWeight = edgeBetweenCurrentNeighbours.getWeight();
+                double currentSrcWeight = dist.get(currentSrcNode.getKey());
+                double currentNeighbourWeight = dist.get(dstNode.getKey());
+                double neighbourNewWeight = edgeWeight + currentSrcWeight;
+                if (currentNeighbourWeight > neighbourNewWeight){
+                    dist.put(dstNode.getKey(),neighbourNewWeight);
+                    NodeQueue.add(dstNode);
+                }
             }
         }
-        double shortestPath = Double.MAX_VALUE;
-        for (int i = 0; i < allPaths.size(); i++) {
-            int currentNodeTag = this.graph.getNode(i).getTag();
-            if ((currentNodeTag == IsConnected) && allPaths.get(i) < shortestPath) {
-                shortestPath = allPaths.get(i);
-            }
-        }
+        double shortestPath = dist.get(dest);
         return (shortestPath == 0.0) ? -1 : shortestPath;
     }
-
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         return null;
@@ -202,6 +200,14 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         return null;
+    }
+
+    private void setAllTags(DirectedWeightedGraph g ,int value) {
+        Iterator<NodeData> nodeIter = g.nodeIter();
+        while (nodeIter.hasNext()){
+            NodeData currentNode = nodeIter.next();
+            currentNode.setTag(value);
+        }
     }
 
     @Override
