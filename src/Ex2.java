@@ -20,8 +20,8 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    public static DirectedWeightedGraph getGrapg(String json_file) throws IOException, ParseException {
-        DirectedWeightedGraph ans = new DirectedWeightedGraphC();
+    public static DirectedWeightedGraph getGraph(String json_file) throws IOException, ParseException {
+        DirectedWeightedGraph ans = new MyDWG();
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(new FileReader(json_file));
         JSONObject jobj =(JSONObject) obj;

@@ -118,8 +118,8 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
     Mission -> Find the shortest path between given src and dest nodes;
     It runs as follows :
-    Step 1: Build a structure which stores the distance to each node and set it all to infinity.
-    Step 2: Create a priority queue and add the src node and change its distance to zero.
+    Step 1: Build a structure which stores the distance to each node, set it all to infinity.
+    Step 2: Create a priority queue and add the src node, change its distance to zero.
     Step 3: While queue is not empty, poll a node.
     Step 4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
            distance(this node, current neighbour)] < (current distance to current neighbour).
@@ -149,6 +149,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         while (!NodeQueue.isEmpty()){
             NodeData currentSrcNode = NodeQueue.poll();
             Iterator<EdgeData> edgeIter = this.graph.edgeIter(currentSrcNode.getKey());
+
             while (edgeIter.hasNext()) {
                 EdgeData edgeBetweenCurrentNeighbours = edgeIter.next();
                 NodeData dstNode = this.graph.getNode(edgeBetweenCurrentNeighbours.getDest());
@@ -167,8 +168,8 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     }
 /*
     The Idea for this function is also based on the Dijkstra's algorithm.
-    Mission -> return the list of nodes which represent the shortest path from a given src node to the given dest.
-    Implementation -> same as shortestPathDist, only now we for each node we saved a list of nodes from src to it,
+    Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest.
+    Implementation -> same as shortestPathDist. Only now for each node, we saved a list of nodes from src to it,
                       which updates as well.
     Last, return the dest list.
  */
