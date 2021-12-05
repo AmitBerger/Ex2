@@ -66,7 +66,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         } else if (g.nodeSize() == 0 || g.nodeSize() == 1) {
             return true;
         }
-        setAllTags(g, 0);
+        setAllTags(g,0);
         Queue<NodeData> NodeQueue = new LinkedList<>();
         Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
@@ -107,46 +107,46 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         Iterator<EdgeData> edgeIter = this.graph.edgeIter();
         while (edgeIter.hasNext()) {
             EdgeData currentEdge = edgeIter.next();
-            HashMap<Integer, EdgeData> reversedEdge = new HashMap<>();
-            reversedEdge.put(currentEdge.getSrc(), currentEdge);
-            newGrph.edgeList.put(currentEdge.getDest(), reversedEdge);
+            HashMap<Integer,EdgeData> reversedEdge = new HashMap<>();
+            reversedEdge.put(currentEdge.getSrc(),currentEdge);
+            newGrph.edgeList.put(currentEdge.getDest(),reversedEdge);
         }
         return newGrph;
     }
 
-    /*  The Idea for this function is based on the Dijkstra's algorithm.
-        Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
-        Mission -> Find the shortest path between given src and dest nodes;
-        It runs as follows :
-        Step 1: Build a structure which stores the distance to each node, set it all to infinity.
-        Step 2: Create a priority queue and add the src node, change its distance to zero.
-        Step 3: While queue is not empty, poll a node.
-        Step 4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
-               distance(this node, current neighbour)] < (current distance to current neighbour).
-               If true, update the (current neighbour distance from src to it) to the new value.
-        Meaning, in the end all the nodes will contain the shortest path from src to them.
-        Last, return the distance to dest.
-     */
+/*  The Idea for this function is based on the Dijkstra's algorithm.
+    Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
+    Mission -> Find the shortest path between given src and dest nodes;
+    It runs as follows :
+    Step 1: Build a structure which stores the distance to each node, set it all to infinity.
+    Step 2: Create a priority queue and add the src node, change its distance to zero.
+    Step 3: While queue is not empty, poll a node.
+    Step 4: Run throw all its neighbours and check,if the [distance to this current neighbour node +
+           distance(this node, current neighbour)] < (current distance to current neighbour).
+           If true, update the (current neighbour distance from src to it) to the new value.
+    Meaning, in the end all the nodes will contain the shortest path from src to them.
+    Last, return the distance to dest.
+ */
     @Override
-    public double shortestPathDist(int src, int dest) {              // in progress
+    public double shortestPathDist(int src, int dest) {
         if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
             return -1;
         }
-        if (src == dest) {
+        if (src == dest){
             return 0;
         }
-        HashMap<Integer, Double> dist = new HashMap<>();
+        HashMap<Integer,Double> dist = new HashMap<>();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
-        while (nodeIter.hasNext()) {
+        while (nodeIter.hasNext()){
             NodeData node = nodeIter.next();
-            dist.put(node.getKey(), Double.MAX_VALUE);
+            dist.put(node.getKey(),Double.MAX_VALUE);
         }
         Queue<NodeData> NodeQueue = new PriorityQueue<>();
         NodeData srcNode = this.graph.getNode(src);
         NodeQueue.add(srcNode);
-        dist.put(srcNode.getKey(), 0.0);
+        dist.put(srcNode.getKey(),0.0);
 
-        while (!NodeQueue.isEmpty()) {
+        while (!NodeQueue.isEmpty()){
             NodeData currentSrcNode = NodeQueue.poll();
             Iterator<EdgeData> edgeIter = this.graph.edgeIter(currentSrcNode.getKey());
 
@@ -157,8 +157,8 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
                 double currentSrcWeight = dist.get(currentSrcNode.getKey());
                 double currentNeighbourWeight = dist.get(dstNode.getKey());
                 double neighbourNewWeight = edgeWeight + currentSrcWeight;
-                if (currentNeighbourWeight > neighbourNewWeight) {
-                    dist.put(dstNode.getKey(), neighbourNewWeight);
+                if (currentNeighbourWeight > neighbourNewWeight){
+                    dist.put(dstNode.getKey(),neighbourNewWeight);
                     NodeQueue.add(dstNode);
                 }
             }
@@ -166,39 +166,38 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         double shortestPath = dist.get(dest);
         return (shortestPath == 0.0) ? -1 : shortestPath;
     }
-
-    /*
-        The Idea for this function is also based on the Dijkstra's algorithm.
-        Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest.
-        Implementation -> same as shortestPathDist. Only now for each node, we saved a list of nodes from src to it,
-                          which updates as well.
-        Last, return the dest list.
-     */
+/*
+    The Idea for this function is also based on the Dijkstra's algorithm.
+    Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest.
+    Implementation -> same as shortestPathDist. Only now for each node, we saved a list of nodes from src to it,
+                      which updates as well.
+    Last, return the dest list.
+ */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
             return null;
         }
         List<NodeData> nodeFromSrcToDst = new ArrayList<>();
-        if (src == dest) {
+        if (src == dest){
             nodeFromSrcToDst.add(this.graph.getNode(src));
             return nodeFromSrcToDst;
         }
-        HashMap<Integer, List<NodeData>> nodesList = new HashMap<>();
-        HashMap<Integer, Double> dist = new HashMap<>();
+        HashMap<Integer,List<NodeData>> nodesList = new HashMap<>();
+        HashMap<Integer,Double> dist = new HashMap<>();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
-        while (nodeIter.hasNext()) {
+        while (nodeIter.hasNext()){
             NodeData node = nodeIter.next();
-            dist.put(node.getKey(), Double.MAX_VALUE);
-            nodesList.put(node.getKey(), new LinkedList<>());
+            dist.put(node.getKey(),Double.MAX_VALUE);
+            nodesList.put(node.getKey(),new LinkedList<>());
         }
         // Created a priority queue which gets the src node at first and all its valid paths
         Queue<NodeData> NodeQueue = new PriorityQueue<>();
         NodeData srcNode = this.graph.getNode(src);
         NodeQueue.add(srcNode);
-        dist.put(srcNode.getKey(), 0.0);
+        dist.put(srcNode.getKey(),0.0);
 
-        while (!NodeQueue.isEmpty()) {
+        while (!NodeQueue.isEmpty()){
             NodeData polledNode = NodeQueue.poll();
             // List of nodes from the polled Node containing the nodes from src to the current polled node.
             List<NodeData> currentNodeMinList = new LinkedList<>(nodesList.get(polledNode.getKey()));
@@ -211,12 +210,12 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
                 double currentSrcWeight = dist.get(polledNode.getKey());
                 double currentNeighbourWeight = dist.get(dstNode.getKey());
                 double neighbourNewWeight = edgeWeight + currentSrcWeight;
-                if (currentNeighbourWeight > neighbourNewWeight) {
+                if (currentNeighbourWeight > neighbourNewWeight){
                     // If we got here it means the current min dist and Lst of nodes are about to be updated
-                    dist.put(dstNode.getKey(), neighbourNewWeight);
+                    dist.put(dstNode.getKey(),neighbourNewWeight);
                     NodeQueue.add(dstNode);
                     currentNodeMinList.add(dstNode);
-                    nodesList.put(dstNode.getKey(), currentNodeMinList);
+                    nodesList.put(dstNode.getKey(),currentNodeMinList);
                 }
             }
         }
@@ -232,11 +231,11 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         double min_max_SP = Integer.MAX_VALUE;
         int chosenNode = -1;
         Iterator<NodeData> iter = this.graph.nodeIter();
-        while (iter.hasNext()) {
+        while(iter.hasNext()){
             int node = iter.next().getKey();
             // find the maximum shortest path for each node
             double max_SP = maxShortestPath(node);
-            if (max_SP < min_max_SP) {
+            if(max_SP < min_max_SP){
                 min_max_SP = max_SP;
                 chosenNode = node;
             }
@@ -245,10 +244,10 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return this.graph.getNode(chosenNode);
     }
 
-    private double maxShortestPath(int src) {
+    private double maxShortestPath(int src){
         double maxS_P = 0;
         Iterator<NodeData> iter = this.graph.nodeIter();
-        while (iter.hasNext()) {
+        while(iter.hasNext()){
             NodeData N = iter.next();
             if (N.getKey() != src) {
                 double S_P = this.shortestPathDist(src, N.getKey());
@@ -261,12 +260,13 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+
         return null;
     }
 
-    private void setAllTags(DirectedWeightedGraph g, int value) {
+    private void setAllTags(DirectedWeightedGraph g ,int value) {
         Iterator<NodeData> nodeIter = g.nodeIter();
-        while (nodeIter.hasNext()) {
+        while (nodeIter.hasNext()){
             NodeData currentNode = nodeIter.next();
             currentNode.setTag(value);
         }
@@ -282,4 +282,9 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return false;
     }
 
+    public static void main(String[] args) {
+        MyDWGAlgorithm g = new MyDWGAlgorithm();
+        g.load("data/G1.json");
+    }
 }
+

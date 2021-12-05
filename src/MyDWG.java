@@ -13,6 +13,21 @@ public class MyDWG implements DirectedWeightedGraph {
     private int edgeSize;
     private int mc;
 
+    public void setNodeSize(int newVal){
+        nodeSize = newVal;
+    }
+
+    public void setEdgeSize(int newVal){
+        this.edgeSize = newVal;
+    }
+
+    public void setMcSize(int newVal){
+        this.mc = newVal;
+    }
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getEdgeList(){
+        return this.edgeList;
+    }
+
     public MyDWG() {
         this.nodeList = new HashMap<>();
         this.edgeList = new HashMap<>();
@@ -94,17 +109,20 @@ public class MyDWG implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return (Iterator<NodeData>) this.nodeList.values();
+        return new Iterators.NodeIterator(this);
+//        return (Iterator<NodeData>) this.nodeList.values();
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return (Iterator<EdgeData>) this.edgeList.values();                    // mistake needs to be treated
+        return new Iterators.EdgeIterator(this);
+//        return (Iterator<EdgeData>) this.edgeList.values();                    // mistake needs to be treated
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return (Iterator<EdgeData>) this.edgeList.get(node_id).values();
+        return new Iterators.SpesificEdgeIterator(this , node_id);
+//        return (Iterator<EdgeData>) this.edgeList.get(node_id).values();
     }
 
     @Override
