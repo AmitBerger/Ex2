@@ -33,9 +33,16 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     }
 
     @Override
-//  Took the idea from an implementation we did last year, for printing a tree (up to down).
-//  In this way we can go throw every node child by order.
-//  Which is perfect for this function! only here we will play with the tag to achieve our goal, instead of printing.
+/*  The Idea for this function is based on the BFS method for graph traversal.
+    Site which explains about BFS and its algorithm: https://en.wikipedia.org/wiki/Breadth-first_search .
+    Which we learned in Algorithm 1 class.
+    It runs as follows :
+    Step 1: Take a random node from the graph and check if this Node is connected to all the other nodes.
+    Step 2: Reverse all the edges of the graph.
+    Step 3: check if the random node we chose is still connected to all the other nodes.
+    In class, we proved that when it happens the graph is connected.
+    Meaning, there is a valid path from each node to the others.
+ */
     public boolean isConnected() {
         NodeData someNode = this.getGraph().nodeIter().next();
         boolean oneWayConnected = isNodeConnected(this.graph, someNode);
@@ -46,12 +53,14 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return isNodeConnected(reverseGraph, someNode);
     }
 
+    /*  Mission -> Check if a specific node is connected. Meaning, there is a valid path from it to all the others.
+        Our strategy -> pick a starting node and put if in a queue. Then run in a loop until the queue is empty and
+     *  Remove the head and go throw all the nodes he is connected with one by one. for each,
+     *  add the current node to the queue, and change its tag to "isConneted".
+     *  In the end only the tag of the nodes we have seen in the process will show "IsConnected".
+     * Last, check if all  the nodes tags show "IsConnected"  */
     public boolean isNodeConnected(DirectedWeightedGraph g, NodeData specificNode) {
-        /* Our strategy -> pick a starting node and put if in a queue. Then run in a loop until the queue is empty and
-         * Remove the head and go throw all the nodes he is connected with one by one. for each,
-         *  add the current node to the queue, and change its tag to "isConneted".
-         *  In the end only the tag of the nodes we have seen in the process will show "IsConnected".
-         * Last, check if all  the nodes tags show "IsConnected"  */
+
         if (g.nodeSize() < 0) {
             return false;
         } else if (g.nodeSize() == 0 || g.nodeSize() == 1) {
@@ -104,6 +113,8 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return newGrph;
     }
 
+    /* https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+ */
     @Override
     public double shortestPathDist(int src, int dest) {              // in progress
         if (this.graph.nodeSize() < 2) {
