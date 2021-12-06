@@ -56,20 +56,6 @@ public class MyDWG implements DirectedWeightedGraph {
         }
     }
 
-    public void addEdge(EdgeData e) {
-
-        if (!this.edgeList.containsKey(e)) {
-            HashMap<Integer,EdgeData> h = new HashMap<>();
-            h.put(e.getDest(),e);
-            this.edgeList.put(e.getSrc(),h);
-            this.edgeSize++;
-        }
-        else{
-            this.edgeList.get(e.getSrc()).put(e.getDest(),e);
-        }
-        mc++;
-    }
-
     @Override
     public EdgeData getEdge(int src, int dest) {
         return this.edgeList.get(src).get(dest);

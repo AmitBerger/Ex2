@@ -47,11 +47,11 @@ public class GraphTest {
         EdgeData e5 = new Edge(3, 2, 2.4);
 
         MyDWG dwg = new MyDWG();
-        dwg.addEdge(e1);
-        dwg.addEdge(e2);
-        dwg.addEdge(e3);
-        dwg.addEdge(e4);
-        dwg.addEdge(e5);
+        dwg.connect(e1.getSrc(), e1.getDest(),e1.getWeight());
+        dwg.connect(e2.getSrc(), e2.getDest(),e2.getWeight());
+        dwg.connect(e3.getSrc(), e3.getDest(),e3.getWeight());
+        dwg.connect(e4.getSrc(), e4.getDest(),e4.getWeight());
+        dwg.connect(e5.getSrc(), e5.getDest(),e5.getWeight());
 
 
 

@@ -72,13 +72,9 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         } else if (g.nodeSize() == 0 || g.nodeSize() == 1) {
             return true;
         }
-        setAllTags(g, 0);
+        setAllTags(g, NotYetVisited);
         Queue<NodeData> NodeQueue = new LinkedList<>();
-        Iterator<NodeData> nodeIter = g.nodeIter();
-        while (nodeIter.hasNext()) {
-            NodeData n = nodeIter.next();
-            n.setTag(NotYetVisited);
-        }
+
 //     The next line is legal because in the beginning we confirmed that our graph nodeSize > 1.
 //     In addition, it doesn't meter which node will be the starting one.
         NodeQueue.add(specificNode);
@@ -93,7 +89,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
                 currentEdgeNode.setTag(Visited);
             }
         }
-        nodeIter = g.nodeIter();
+        Iterator<NodeData> nodeIter = g.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currentNode = nodeIter.next();
             if (currentNode.getTag() == NotYetVisited) {
@@ -372,7 +368,8 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/G1.json");
+        g.load("data/G2.json");
+
     }
 }
 

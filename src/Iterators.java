@@ -19,7 +19,7 @@ public class Iterators {
 
         @Override
         public boolean hasNext() {
-            return currentPos < (this.graph.nodeSize() - 1);
+            return currentPos < (this.graph.nodeSize());
         }
 
         @Override
@@ -58,7 +58,7 @@ public class Iterators {
 
         @Override
         public boolean hasNext() {
-            return currentDstPos < (edges.get(currentSrcPos).size() - 1);
+            return currentDstPos < (edges.get(currentSrcPos).size());
         }
 
         @Override
@@ -107,7 +107,7 @@ public class Iterators {
 
         @Override
         public boolean hasNext() {
-            return currentPos < (this.edges.size() - 1);
+            return currentPos < (this.edges.size());
         }
 
         @Override
