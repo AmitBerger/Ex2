@@ -80,7 +80,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         specificNode.setTag(Visited);
 
         while (!NodeQueue.isEmpty()) {
-            NodeData currentNode = NodeQueue.remove();
+            NodeData currentNode = NodeQueue.poll();
 
             Iterator<EdgeData> edgeIter = g.edgeIter(currentNode.getKey());
             while (edgeIter.hasNext()) {
@@ -146,7 +146,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             NodeData node = nodeIter.next();
             dist.put(node.getKey(), Double.MAX_VALUE);
         }
-        Queue<NodeData> NodeQueue = new PriorityQueue<>();
+        Queue<NodeData> NodeQueue = new LinkedList<>();
         NodeData srcNode = this.graph.getNode(src);
         NodeQueue.add(srcNode);
         dist.put(srcNode.getKey(), 0.0);
@@ -198,7 +198,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             nodesList.put(node.getKey(), new LinkedList<>());
         }
         // Created a priority queue which gets the src node at first and all its valid paths
-        Queue<NodeData> NodeQueue = new PriorityQueue<>();
+        Queue<NodeData> NodeQueue = new LinkedList<>();
         NodeData srcNode = this.graph.getNode(src);
         NodeQueue.add(srcNode);
         dist.put(srcNode.getKey(), 0.0);
@@ -362,8 +362,10 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
         JsonArray EdgesArray = myJsonObject.getAsJsonArray("Edges");
         for (JsonElement jsonEdge : EdgesArray) {
-            newGraph.connect(jsonEdge.getAsJsonObject().get("src").getAsInt(), jsonEdge.getAsJsonObject().get("dest").getAsInt(),
-                    jsonEdge.getAsJsonObject().get("w").getAsDouble());
+            int src = jsonEdge.getAsJsonObject().get("src").getAsInt();
+            int dest = jsonEdge.getAsJsonObject().get("dest").getAsInt();
+            double w = jsonEdge.getAsJsonObject().get("w").getAsDouble();
+            newGraph.connect(src, dest, w);
         }
         init(newGraph);
         return true;
@@ -371,8 +373,20 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/G1.json");
+        g.load("data/G3.json");
         System.out.println(g.isConnected());
+        System.out.println(g.shortestPathDist(0,7));
+        System.out.println(g.shortestPath(0,7));
+//        System.out.println(g.tsp());
+//        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
+//        while (edgeIter.hasNext()){
+//            System.out.println(edgeIter.next());
+//        }
+//        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
+//        while (nodeIter.hasNext()){
+//            System.out.println(nodeIter.next());
+//        }
+//        g.save("firstTry.json");
     }
 }
 

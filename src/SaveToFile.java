@@ -45,8 +45,8 @@ public class SaveToFile {
             }
         }
 
-        myJsonObject.add("Nodes", nodesArray);
         myJsonObject.add("Edges", edgesArray);
+        myJsonObject.add("Nodes", nodesArray);
 
         try {
             File f = new File(fileName);

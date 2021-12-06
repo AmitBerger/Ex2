@@ -70,9 +70,13 @@ public class MyDWG implements DirectedWeightedGraph {
         if (srcNode == null || dstNode == null) {
             return;
         }
-        HashMap<Integer, EdgeData> newEdge = new HashMap<>();
-        newEdge.put(dest, givenEdge);
-        this.edgeList.put(src, newEdge);
+        if (!this.edgeList.containsKey(src)){
+            HashMap<Integer, EdgeData> newEdge = new HashMap<>();
+            newEdge.put(dest, givenEdge);
+            this.edgeList.put(src, newEdge);
+        }else{
+            this.edgeList.get(src).put(dest,givenEdge);
+        }
         edgeSize++;
         mc++;
     }
@@ -172,17 +176,17 @@ public class MyDWG implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         return new Iterator<EdgeData>() {
-            Iterator<EdgeData> edgeIter = edgeList.get(node_id).values().iterator();
+            Iterator<Integer> edgesKeySet = edgeList.get(node_id).keySet().iterator();
             private final int erorChecker = getMC();
-            private EdgeData currentPos = null;
-            private EdgeData lastPos = null;
+            private int currentPos = 0;
+            private int lastPos = 0;
 
             @Override
             public boolean hasNext() {
                 if (erorChecker != getMC()) {
                     throw new NoSuchElementException();
                 }
-                return edgeIter.hasNext();
+                return edgesKeySet.hasNext();
             }
 
             @Override
@@ -191,17 +195,17 @@ public class MyDWG implements DirectedWeightedGraph {
                     throw new NoSuchElementException();
                 }
                 lastPos = currentPos;
-                currentPos = edgeIter.next();
-                return currentPos;
+                currentPos = edgesKeySet.next();
+                return getEdge(node_id,currentPos);
             }
 
             @Override
             public void remove() {
-                removeEdge(currentPos.getSrc(), currentPos.getDest());
-                EdgeData last = lastPos;
+                removeEdge(node_id, currentPos);
+                int last = lastPos;
                 edgeIter(node_id);
                 while (currentPos != last) {
-                    edgeIter.next();
+                    edgesKeySet.next();
                 }
             }
         };
