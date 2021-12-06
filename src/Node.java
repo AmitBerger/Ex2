@@ -115,7 +115,7 @@ public class Node implements NodeData {
     @Override
     public String toString() {
         return "Node{" +
-                "key=" + key +
+                "key=" + key +", "+"Tag="+ this.tag+
                 '}';
     }
 }

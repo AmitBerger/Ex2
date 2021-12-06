@@ -2,8 +2,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class MyDWG implements DirectedWeightedGraph {
 
@@ -26,15 +25,15 @@ public class MyDWG implements DirectedWeightedGraph {
         this.edgeList = new HashMap<>();
         Iterator<NodeData> nodeIter = g.nodeIter();
         Iterator<EdgeData> edgeIter = g.edgeIter();
-        while (nodeIter.hasNext()){
+        while (nodeIter.hasNext()) {
             NodeData currentNode = nodeIter.next();
-            this.nodeList.put(currentNode.getKey(),currentNode);
-            HashMap<Integer,EdgeData> currEdgeHash = new HashMap<>();
-            this.edgeList.put(currentNode.getKey(),currEdgeHash);
+            this.nodeList.put(currentNode.getKey(), currentNode);
+            HashMap<Integer, EdgeData> currEdgeHash = new HashMap<>();
+            this.edgeList.put(currentNode.getKey(), currEdgeHash);
         }
-        while (edgeIter.hasNext()){
+        while (edgeIter.hasNext()) {
             EdgeData currentEdge = edgeIter.next();
-            this.edgeList.get(currentEdge.getSrc()).put(currentEdge.getDest(),currentEdge);
+            this.edgeList.get(currentEdge.getSrc()).put(currentEdge.getDest(), currentEdge);
         }
         this.edgeSize = g.edgeSize();
         this.nodeSize = g.nodeSize();
@@ -80,19 +79,133 @@ public class MyDWG implements DirectedWeightedGraph {
 
     @Override
     public Iterator<NodeData> nodeIter() {
-        return new Iterators.NodeIterator(this);
-//        return (Iterator<NodeData>) this.nodeList.values();
+        return new Iterator<NodeData>() {
+            Iterator<NodeData> nodeIter = nodeList.values().iterator();
+            private final int erorChecker = getMC();
+            private NodeData currentPos = null;
+            private NodeData lastPos = null;
+
+            @Override
+            public boolean hasNext() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                return nodeIter.hasNext();
+            }
+
+            @Override
+            public NodeData next() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                lastPos = currentPos;
+                currentPos = nodeIter.next();
+                return currentPos;
+            }
+
+            @Override
+            public void remove() {
+                removeNode(currentPos.getKey());
+                NodeData last = lastPos;
+                nodeIter();
+                while (currentPos != last) {
+                    nodeIter.next();
+                }
+            }
+//        return new Iterators.NodeIterator(this);
+        };
     }
 
     @Override
     public Iterator<EdgeData> edgeIter() {
-        return new Iterators.EdgeIterator(this);
-//        return (Iterator<EdgeData>) this.edgeList.values();                    // mistake needs to be treated
+        return new Iterator<EdgeData>() {
+            Iterator<Integer> SrcKeySet = edgeList.keySet().iterator();
+            Iterator<EdgeData> currentNodeEdges = edgeIter(SrcKeySet.next());
+            private final int erorChecker = getMC();
+            private EdgeData currentPos = null;
+            private EdgeData lastPos = null;
+            private int currentKeyPos = 0;
+
+            @Override
+            public boolean hasNext() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                if (!currentNodeEdges.hasNext()) {
+                    if (!SrcKeySet.hasNext()) {
+                        return false;
+                    }
+                    currentKeyPos = SrcKeySet.next();
+                    currentNodeEdges = edgeIter(currentKeyPos);
+                }
+                return currentNodeEdges.hasNext();
+            }
+
+            @Override
+            public EdgeData next() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                lastPos = currentPos;
+                currentPos = currentNodeEdges.next();
+                return currentPos;
+            }
+
+            @Override
+            public void remove() {
+                removeEdge(currentPos.getSrc(), currentPos.getDest());
+                EdgeData last = lastPos;
+                int lastKey = currentKeyPos;
+                edgeIter();
+                while (currentPos != last) {
+                    currentNodeEdges.next();
+                }
+                while (currentKeyPos != lastKey){
+                    SrcKeySet.next();
+                }
+            }
+//        return new Iterators.NodeIterator(this);
+        };
+        // mistake needs to be treated
     }
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return new Iterators.SpesificEdgeIterator(this , node_id);
+        return new Iterator<EdgeData>() {
+            Iterator<EdgeData> edgeIter = edgeList.get(node_id).values().iterator();
+            private final int erorChecker = getMC();
+            private EdgeData currentPos = null;
+            private EdgeData lastPos = null;
+
+            @Override
+            public boolean hasNext() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                return edgeIter.hasNext();
+            }
+
+            @Override
+            public EdgeData next() {
+                if (erorChecker != getMC()) {
+                    throw new NoSuchElementException();
+                }
+                lastPos = currentPos;
+                currentPos = edgeIter.next();
+                return currentPos;
+            }
+
+            @Override
+            public void remove() {
+                removeEdge(currentPos.getSrc(), currentPos.getDest());
+                EdgeData last = lastPos;
+                edgeIter(node_id);
+                while (currentPos != last) {
+                    edgeIter.next();
+                }
+            }
+        };
+//        return new Iterators.SpesificEdgeIterator(this , node_id);
 //        return (Iterator<EdgeData>) this.edgeList.get(node_id).values();
     }
 
@@ -134,21 +247,23 @@ public class MyDWG implements DirectedWeightedGraph {
         return this.mc;
     }
 
-    public void setNodeSize(int newVal){
+    public void setNodeSize(int newVal) {
         nodeSize = newVal;
     }
 
-    public void setEdgeSize(int newVal){
+    public void setEdgeSize(int newVal) {
         this.edgeSize = newVal;
     }
 
-    public void setMcSize(int newVal){
+    public void setMcSize(int newVal) {
         this.mc = newVal;
     }
-    public HashMap<Integer, HashMap<Integer, EdgeData>> getEdgeList(){
+
+    public HashMap<Integer, HashMap<Integer, EdgeData>> getEdgeList() {
         return this.edgeList;
     }
-    public HashMap<Integer, EdgeData> getSpecificNodeEdges(int nodeKey){
+
+    public HashMap<Integer, EdgeData> getSpecificNodeEdges(int nodeKey) {
         return this.edgeList.get(nodeKey);
     }
 
