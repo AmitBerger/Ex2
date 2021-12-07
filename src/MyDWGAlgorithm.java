@@ -111,14 +111,14 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         Iterator<EdgeData> edgeIter = this.graph.edgeIter();
         while (edgeIter.hasNext()) {
             EdgeData currentEdge = edgeIter.next();
-            Edge reversedEdge = new Edge(currentEdge.getDest(),currentEdge.getSrc(),currentEdge.getWeight());
+            Edge reversedEdge = new Edge(currentEdge.getDest(), currentEdge.getSrc(), currentEdge.getWeight());
 
-            if (newGrph.edgeList.containsKey(currentEdge.getDest())){
-                newGrph.edgeList.get(currentEdge.getDest()).put(currentEdge.getSrc(),reversedEdge);
-            }else{
+            if (newGrph.edgeList.containsKey(currentEdge.getDest())) {
+                newGrph.edgeList.get(currentEdge.getDest()).put(currentEdge.getSrc(), reversedEdge);
+            } else {
                 HashMap<Integer, EdgeData> reversed = new HashMap<>();
-                reversed.put(currentEdge.getSrc(),reversedEdge);
-                newGrph.edgeList.put(currentEdge.getDest(),reversed);
+                reversed.put(currentEdge.getSrc(), reversedEdge);
+                newGrph.edgeList.put(currentEdge.getDest(), reversed);
             }
         }
         return newGrph;
@@ -194,7 +194,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             nodeFromSrcToDst.add(this.graph.getNode(src));
             return nodeFromSrcToDst;
         }
-        setAllTags(this.graph,-1);
+        setAllTags(this.graph, -1);
         HashMap<Integer, Double> dist = new HashMap<>();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
         while (nodeIter.hasNext()) {
@@ -228,19 +228,19 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             }
         }
         int currentTag = this.graph.getNode(dest).getTag();
-        if (currentTag == -1){
+        if (currentTag == -1) {
             return null;
         }
         Stack<NodeData> temp = new Stack<>();
         temp.push(this.graph.getNode(dest));
-        while (currentTag != src){
+        while (currentTag != src) {
             NodeData newNode = this.graph.getNode(currentTag);
             temp.push(newNode);
             currentTag = newNode.getTag();
         }
         temp.push(this.graph.getNode(src));
         List<NodeData> nodesList = new LinkedList<>();
-        while (!temp.isEmpty()){
+        while (!temp.isEmpty()) {
             nodesList.add(temp.pop());
         }
         return nodesList;
@@ -282,7 +282,6 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return maxS_P;
     }
 
-    //https://www.interviewbit.com/blog/travelling-salesman-problem/
 //    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
@@ -291,33 +290,51 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         List<NodeData> ans = new LinkedList<>();
         Stack<Integer> stack = new Stack<>();
         MyDWG matrix = new MyDWG();
-        for (NodeData x : cities) {
-            matrix.nodeList.put(x.getKey(), x);
-            for (NodeData y : cities) {
-                HashMap<Integer, EdgeData> edge = new HashMap<>();
-                double shortestPathDist = shortestPathDist(x.getKey(), y.getKey());
-                edge.put(y.getKey(), new Edge(x.getKey(), y.getKey(), shortestPathDist));
-                matrix.edgeList.put(x.getKey(), edge);
-            }
+        for (NodeData node : cities) {
+            matrix.nodeList.put(node.getKey(), node);
         }
-        setAllTags(matrix, 0);
+        Iterator<EdgeData> edgeIter = this.graph.edgeIter();
+        while (edgeIter.hasNext()) {
+            EdgeData edge = edgeIter.next();
+            if (cities.contains(this.graph.getNode(edge.getSrc())) && cities.contains(this.graph.getNode(edge.getDest()))) {
+                if (matrix.edgeList.containsKey(edge.getSrc())) {
+                    matrix.edgeList.get(edge.getSrc()).put(edge.getDest(), edge);
+                } else {
+                    HashMap<Integer, EdgeData> newEdgeHash = new HashMap<>();
+                    newEdgeHash.put(edge.getDest(), edge);
+                    matrix.edgeList.put(edge.getSrc(), newEdgeHash);
+                }
+            }
+        }// Now we possess matrix graph which contains only the desired Nodes + Edges
+
+        MyDWGAlgorithm mat = new MyDWGAlgorithm();
+        mat.init(matrix);
+
         int element, dst = 0, i;
-        double min;
+        double min , total = 0;
         boolean minFlag = false;
-        stack.push(0);
-        ans.add(matrix.getNode(0));
+        NodeData firstNode = mat.center();
+        if (firstNode == null){
+            return null;
+        }
+        setAllTags(matrix, NotYetVisited);
+        stack.push(firstNode.getKey());
+        ans.add(firstNode);
+        firstNode.setTag(Visited);
 
         while (!stack.isEmpty()) {
             element = stack.peek();
-            i = 1;
+            i = 0;
             min = Double.MAX_VALUE;
             while (i < matrix.nodeSize()) {
-                double currentEdgeWeight = matrix.edgeList.get(element).get(i).getWeight();
-                if (currentEdgeWeight > 0 && matrix.getNode(i).getTag() == NotYetVisited) {
-                    if (min > currentEdgeWeight) {
-                        min = currentEdgeWeight;
-                        dst = i;
-                        minFlag = true;
+                if (matrix.edgeList.get(element).get(i) != null){
+                    double currentEdgeWeight = matrix.edgeList.get(element).get(i).getWeight();
+                    if (currentEdgeWeight > 0.0 && matrix.getNode(i).getTag() == NotYetVisited) {
+                        if (min > currentEdgeWeight) {
+                            min = currentEdgeWeight;
+                            dst = i;
+                            minFlag = true;
+                        }
                     }
                 }
                 i++;
@@ -326,17 +343,13 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
                 matrix.getNode(dst).setTag(Visited);
                 stack.push(dst);
                 ans.add(matrix.getNode(dst));
+                total += min;
                 minFlag = false;
                 continue;
             }
             stack.pop();
         }
-//      The ans is reversed. Therefore:
-        for (int j = 0; j < ans.size() / 2; j++) {
-            NodeData temp = ans.get(j);
-            ans.set(j, ans.get(ans.size() - j - 1));
-            ans.set((ans.size() - j - 1), temp);
-        }
+        System.out.println(total);
         return ans;
     }
 
@@ -391,14 +404,15 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/G1.json");
-//        System.out.println(g.isConnected());
-//        System.out.println(g.shortestPathDist(0, 7));
-//        System.out.println(g.shortestPath(0, 7));
+        g.load("data/CompleteG.json");
+//        g.load("data/G1.json");
+        System.out.println(g.isConnected());
+        System.out.println(g.shortestPathDist(2, 3));
+        System.out.println(g.shortestPath(2, 3));
         List<NodeData> cities = new LinkedList<>();
         Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
-        while (nodeIter.hasNext()){
-             cities.add(nodeIter.next());
+        while (nodeIter.hasNext()) {
+            cities.add(nodeIter.next());
         }
         System.out.println(g.tsp(cities));
 //        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
