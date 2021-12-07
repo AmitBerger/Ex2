@@ -55,15 +55,15 @@ Which has its own graph object.
 **class mission** -> implements functions that operates on the graph.
 
 **abilities:** 
-    * copy(Deep).
-    * init - given a graph, initialize.
-    * isConnected -  Check if there is valid path from each node to the others.
-    * shortestPathDist - returns the weight of the shortest path between two Nodes.
-    * shortestPath - returns the actual shortest path(Nodes).
-    * center - Finds the NodeData which minimizes the max distance to all the other nodes.
-    * tsp - Computes a list of consecutive nodes which go over all the nodes in cities.
-    * save - Saves the graph info into a json file.
-    * load - Loads a graph info from given json file.
+ * copy(Deep).
+ * init - given a graph, initialize.
+ * isConnected -  Check if there is valid path from each node to the others.
+ * shortestPathDist - returns the weight of the shortest path between two Nodes.
+ * shortestPath - returns the actual shortest path(Nodes).
+ * center - Finds the NodeData which minimizes the max distance to all the other nodes.
+ * tsp - Computes a list of consecutive nodes which go over all the nodes in cities.
+ * save - Saves the graph info into a json file.
+ * load - Loads a graph info from given json file.
 
 
 **Example of a json file contant:**
