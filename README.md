@@ -15,7 +15,7 @@ The project is divided into two main class:
 
 Imagine the nodes as coordinates on a map, and the edges as a path between those two.
 
-****************************implementation****************************
+****************************implementation:****************************
 
 # Graph:
 
