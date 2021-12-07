@@ -86,7 +86,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             while (edgeIter.hasNext()) {
                 EdgeData currentEdge = edgeIter.next();
                 NodeData currentEdgeNode = g.getNode(currentEdge.getDest());
-                if (currentEdgeNode.getTag() == NotYetVisited){
+                if (currentEdgeNode.getTag() == NotYetVisited) {
                     NodeQueue.add(currentEdgeNode);
                     currentEdgeNode.setTag(Visited);
                 }
@@ -184,30 +184,28 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         if (this.graph.getNode(src) == null || this.graph.getNode(dest) == null) {
             return null;
         }
-        List<NodeData> nodeFromSrcToDst = new ArrayList<>();
         if (src == dest) {
+            List<NodeData> nodeFromSrcToDst = new ArrayList<>();
             nodeFromSrcToDst.add(this.graph.getNode(src));
             return nodeFromSrcToDst;
         }
-        HashMap<Integer, List<NodeData>> nodesList = new HashMap<>();
+        setAllTags(this.graph,-1);
         HashMap<Integer, Double> dist = new HashMap<>();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData node = nodeIter.next();
             dist.put(node.getKey(), Double.MAX_VALUE);
-            nodesList.put(node.getKey(), new LinkedList<>());
         }
+
         // Created a priority queue which gets the src node at first and all its valid paths
         Queue<NodeData> NodeQueue = new LinkedList<>();
         NodeData srcNode = this.graph.getNode(src);
         NodeQueue.add(srcNode);
+        srcNode.setTag(src);
         dist.put(srcNode.getKey(), 0.0);
 
         while (!NodeQueue.isEmpty()) {
             NodeData polledNode = NodeQueue.poll();
-            // List of nodes from the polled Node containing the nodes from src to the current polled node.
-            List<NodeData> currentNodeMinList = new LinkedList<>(nodesList.get(polledNode.getKey()));
-            // Iterator that runs throw all the neighbours of the polled node.
             Iterator<EdgeData> edgeIter = this.graph.edgeIter(polledNode.getKey());
             while (edgeIter.hasNext()) {
                 EdgeData edgeBetweenCurrentNeighbours = edgeIter.next();
@@ -218,14 +216,29 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
                 double neighbourNewWeight = edgeWeight + currentSrcWeight;
                 if (currentNeighbourWeight > neighbourNewWeight) {
                     // If we got here it means the current min dist and Lst of nodes are about to be updated
+                    dstNode.setTag(polledNode.getKey());
                     dist.put(dstNode.getKey(), neighbourNewWeight);
                     NodeQueue.add(dstNode);
-                    currentNodeMinList.add(dstNode);
-                    nodesList.put(dstNode.getKey(), currentNodeMinList);
                 }
             }
         }
-        return nodesList.get(dest);
+        int currentTag = this.graph.getNode(dest).getTag();
+        if (currentTag == -1){
+            return null;
+        }
+        Stack<NodeData> temp = new Stack<>();
+        temp.push(this.graph.getNode(dest));
+        while (currentTag != src){
+            NodeData newNode = this.graph.getNode(currentTag);
+            temp.push(newNode);
+            currentTag = newNode.getTag();
+        }
+        temp.push(this.graph.getNode(src));
+        List<NodeData> nodesList = new LinkedList<>();
+        while (!temp.isEmpty()){
+            nodesList.add(temp.pop());
+        }
+        return nodesList;
     }
 
     @Override
@@ -373,10 +386,10 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/G3.json");
+        g.load("data/G1.json");
         System.out.println(g.isConnected());
-        System.out.println(g.shortestPathDist(0,7));
-        System.out.println(g.shortestPath(0,7));
+        System.out.println(g.shortestPathDist(0, 7));
+        System.out.println(g.shortestPath(0, 7));
 //        System.out.println(g.tsp());
 //        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
 //        while (edgeIter.hasNext()){
