@@ -55,8 +55,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         if (!oneWayConnected) {
             return false;
         }
-        MyDWG reverseGraph = reverseGraph();
-        return isNodeConnected(reverseGraph, someNode);
+        return isNodeConnected(reverseGraph(), someNode);
     }
 
     /*  Mission -> Check if a specific node is connected. Meaning, there is a valid path from it to all the others.
@@ -112,9 +111,15 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         Iterator<EdgeData> edgeIter = this.graph.edgeIter();
         while (edgeIter.hasNext()) {
             EdgeData currentEdge = edgeIter.next();
-            HashMap<Integer, EdgeData> reversedEdge = new HashMap<>();
-            reversedEdge.put(currentEdge.getSrc(), currentEdge);
-            newGrph.edgeList.put(currentEdge.getDest(), reversedEdge);
+            Edge reversedEdge = new Edge(currentEdge.getDest(),currentEdge.getSrc(),currentEdge.getWeight());
+
+            if (newGrph.edgeList.containsKey(currentEdge.getDest())){
+                newGrph.edgeList.get(currentEdge.getDest()).put(currentEdge.getSrc(),reversedEdge);
+            }else{
+                HashMap<Integer, EdgeData> reversed = new HashMap<>();
+                reversed.put(currentEdge.getSrc(),reversedEdge);
+                newGrph.edgeList.put(currentEdge.getDest(),reversed);
+            }
         }
         return newGrph;
     }
@@ -387,10 +392,15 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         g.load("data/G1.json");
-        System.out.println(g.isConnected());
-        System.out.println(g.shortestPathDist(0, 7));
-        System.out.println(g.shortestPath(0, 7));
-//        System.out.println(g.tsp());
+//        System.out.println(g.isConnected());
+//        System.out.println(g.shortestPathDist(0, 7));
+//        System.out.println(g.shortestPath(0, 7));
+        List<NodeData> cities = new LinkedList<>();
+        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
+        while (nodeIter.hasNext()){
+             cities.add(nodeIter.next());
+        }
+        System.out.println(g.tsp(cities));
 //        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
 //        while (edgeIter.hasNext()){
 //            System.out.println(edgeIter.next());
