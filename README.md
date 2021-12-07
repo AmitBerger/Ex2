@@ -29,10 +29,10 @@ Its nodes and edges are stored in HashMaps.
 The edges HashMap contains an inner HashMap. Together, both keys represent the source and destination of a given edge.
 
 There are some functions for our usage as well:
-    * getters && setters
-    * adding/removing a node/edge
-    * connect - builds an edge
-    * Iterators
+ * getters && setters
+ * adding/removing a node/edge
+ * connect - builds an edge
+ * Iterators
 
 **Node:**
 
