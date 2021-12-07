@@ -11,11 +11,11 @@ The project is divided into two main class:
 1. Class MyDWG which holds the graph.
 2. Class MyDWGAlgorithm, in charge of the graph functions.
 
-****************************incentive****************************
+****************************incentive:****************************
 
 Imagine the nodes as coordinates on a map, and the edges as a path between those two.
 
-****************************implementation:****************************
+****************************# implementation:****************************
 
 # Graph:
 
