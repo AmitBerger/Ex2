@@ -1,6 +1,6 @@
-# OOP_Ex2
-DIRECTED-WEIGHTED-GRAPH:
+# DIRECTED-WEIGHTED-GRAPH:
 
+*Authors:* Orel Zamler && Amit Berger 
 ****************************Description:****************************
 In this project we implemented an infrastructure of a directed weighted graph.
 
