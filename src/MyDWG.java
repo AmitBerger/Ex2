@@ -124,9 +124,8 @@ public class MyDWG implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter() {
         return new Iterator<EdgeData>() {
-            final int firstEdge = edgeList.keySet().iterator().next();
-            final Iterator<Integer> SrcKeySet = edgeList.keySet().iterator();
-            Iterator<EdgeData> currentNodeEdges = edgeIter(firstEdge);
+            Iterator<Integer> SrcKeySet = edgeList.keySet().iterator();
+            Iterator<EdgeData> currentNodeEdges = edgeIter(SrcKeySet.next());
             private final int erorChecker = getMC();
             private EdgeData currentPos = null;
             private EdgeData lastPos = null;

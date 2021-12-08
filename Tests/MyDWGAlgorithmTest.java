@@ -321,17 +321,17 @@ class MyDWGAlgorithmTest {
     @org.junit.jupiter.api.Test
     void runTimeMillionNodes() {
         long start = new Date().getTime();
-
-        for (int i = 0; i < 1000000; i++) {
+        int size =6;
+        for (int i = 0; i < size; i++) {
             Node temp = new Node(i);
             empty.addNode(temp);
         }
 
         double w = 0.1;
         List<NodeData> cities = new LinkedList<>();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < size; i++) {
             w += 0.2;
-            for (int j = i + 1; j < 1000000 && j < i + 21; j++) {
+            for (int j = i + 1; j < size && j < i + 21; j++) {
                 w += 0.1;
                 empty.connect(i, j, w);
             }
@@ -345,6 +345,14 @@ class MyDWGAlgorithmTest {
             }
         }
         EmptyAlgorithm.init(empty);
+        Iterator<NodeData> nodeIter = EmptyAlgorithm.getGraph().nodeIter();
+        while (nodeIter.hasNext()) {
+            NodeData node = nodeIter.next();
+            Iterator<EdgeData> edge = EmptyAlgorithm.getGraph().edgeIter(node.getKey());
+            while (edge.hasNext()){
+                System.out.println(edge.next());
+            }
+        }
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 5);

@@ -409,12 +409,17 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         System.out.println(g.isConnected());
         System.out.println(g.shortestPathDist(2, 3));
         System.out.println(g.shortestPath(2, 3));
-        List<NodeData> cities = new LinkedList<>();
+
+//        List<NodeData> cities = new LinkedList<>();
         Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
         while (nodeIter.hasNext()) {
-            cities.add(nodeIter.next());
+            NodeData node = nodeIter.next();
+            Iterator<EdgeData> edge = g.graph.edgeIter(node.getKey());
+            while (edge.hasNext()){
+                System.out.println(edge.next());
+            }
         }
-        System.out.println(g.tsp(cities));
+//        System.out.println(g.tsp(cities));
 //        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
 //        while (edgeIter.hasNext()){
 //            System.out.println(edgeIter.next());
