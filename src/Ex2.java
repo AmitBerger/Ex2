@@ -17,9 +17,11 @@ public class Ex2 {
      */
 
     public static DirectedWeightedGraph getGraph(String json_file) throws IOException, ParseException {
-        DirectedWeightedGraph ans = new MyDWG();
-
-
+        // ****** Add your code here ******
+        MyDWGAlgorithm g = new MyDWGAlgorithm();
+        g.load(json_file);
+        DirectedWeightedGraph ans = g.getGraph();
+        // ********************************
         return ans;
     }
 
@@ -32,7 +34,8 @@ public class Ex2 {
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
         DirectedWeightedGraphAlgorithms ans = null;
         // ****** Add your code here ******
-
+        ans = new MyDWGAlgorithm();
+        ans.load(json_file);
         // ********************************
         return ans;
     }

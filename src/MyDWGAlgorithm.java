@@ -174,7 +174,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             }
         }
         double shortestPath = dist.get(dest);
-        return (shortestPath == 0.0) ? -1 : shortestPath;
+        return (shortestPath == 0.0) || (shortestPath == Double.MAX_VALUE) ? -1 : shortestPath;
     }
 
     /*

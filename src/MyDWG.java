@@ -65,11 +65,11 @@ public class MyDWG implements DirectedWeightedGraph {
 
         NodeData srcNode = getNode(src);
         NodeData dstNode = getNode(dest);
-        Edge givenEdge = new Edge(src, dest, w);
 //      Assuming there can be an edge from one node to itself
         if (srcNode == null || dstNode == null) {
             return;
         }
+        Edge givenEdge = new Edge(src, dest, w);
         if (!this.edgeList.containsKey(src)){
             HashMap<Integer, EdgeData> newEdge = new HashMap<>();
             newEdge.put(dest, givenEdge);
@@ -77,6 +77,7 @@ public class MyDWG implements DirectedWeightedGraph {
         }else{
             this.edgeList.get(src).put(dest,givenEdge);
         }
+        this.nodeList.get(src).setWeight(this.nodeList.get(src).getWeight() +1);
         edgeSize++;
         mc++;
     }
