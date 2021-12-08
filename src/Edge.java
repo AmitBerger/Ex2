@@ -81,7 +81,6 @@ public class Edge implements EdgeData {
         return "Edge{" +
                 "src=" + src +
                 ", dst=" + dst +
-                ", wgt=" + wgt +
-                ","+ '}';
+                ", wgt=" + wgt + '}';
     }
 }

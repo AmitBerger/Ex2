@@ -8,7 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="naive-json_2.11-35" level="project" />
     <orderEntry type="library" name="org" level="project" />
     <orderEntry type="module-library">
       <library name="JUnit4">
@@ -20,8 +19,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="gson-2.8.6" level="project" />
-    <orderEntry type="library" name="java-json" level="project" />
     <orderEntry type="module-library">
       <library name="JUnit5.7.0">
         <CLASSES>
@@ -38,5 +35,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="gson-2.8.6" level="project" />
   </component>
 </module>

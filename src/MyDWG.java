@@ -75,10 +75,14 @@ public class MyDWG implements DirectedWeightedGraph {
             newEdge.put(dest, givenEdge);
             this.edgeList.put(src, newEdge);
         }else{
+            if (this.edgeList.get(src).containsKey(dest)){
+                this.edgeSize--;
+            }
             this.edgeList.get(src).put(dest,givenEdge);
         }
-        this.nodeList.get(src).setWeight(this.nodeList.get(src).getWeight() +1);
-        edgeSize++;
+
+        this.nodeList.get(src).setWeight(this.nodeList.get(src).getWeight() +1);       // need to fix always increasing
+        this.edgeSize++;
         mc++;
     }
 
@@ -246,7 +250,7 @@ public class MyDWG implements DirectedWeightedGraph {
 
     @Override
     public int edgeSize() {
-        return edgeList.size();
+        return this.edgeSize;
     }
 
     @Override
