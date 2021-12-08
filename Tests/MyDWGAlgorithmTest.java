@@ -108,7 +108,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("copy: " + dt);
 
     }
 
@@ -135,7 +135,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("isConnected: " + dt);
 
     }
 
@@ -172,7 +172,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("isNodeConnected: " + dt);
 
     }
 
@@ -209,7 +209,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("shortestPathDist: " + dt);
 
     }
 
@@ -254,7 +254,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("shortestPath: " + dt);
 
     }
 
@@ -281,7 +281,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("center: " + dt);
 
     }
 
@@ -332,7 +332,7 @@ class MyDWGAlgorithmTest {
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 1);
-        System.out.println("runTimeTwoMillionNodes: " + dt);
+        System.out.println("tsp: " + dt);
 
     }
 
@@ -428,10 +428,6 @@ class MyDWGAlgorithmTest {
         assertTrue(dt < 5);
         System.out.println("runTimeTwoMillionNodes: " + dt);
 
-    }
-
-    public int randomInt(int min, int max) {
-        return random.ints(1, min, max).findFirst().getAsInt();
     }
 
 }
