@@ -1,6 +1,7 @@
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
+import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -20,40 +21,19 @@ public class GraphTest {
     NodeData e = new Node(4, p5);
 
     EdgeData e1 = new Edge(0, 3, 1.0);
-    EdgeData e2 = new Edge(0, 2, 2.0);
+    EdgeData e2 = new Edge(2, 2, 2.0);
     EdgeData e3 = new Edge(1, 2, 3.5);
     EdgeData e4 = new Edge(4, 1, 5.3);
     EdgeData e5 = new Edge(3, 2, 2.4);
 
     MyDWG dwg = new MyDWG();
 
-    public static void main(String[] args) {
-        Location p1 = new Location(35.19589389346247, 32.10152879327731, 0.0);
-        Location p2 = new Location(35.20319591121872, 32.10318254621849, 0.0);
-        Location p3 = new Location(35.20752617756255, 32.1025646605042, 0.0);
-        Location p4 = new Location(35.21007339305892, 32.10107446554622, 0.0);
-        Location p5 = new Location(35.21310882485876, 32.104636394957986, 0.0);
-
-        NodeData a = new Node(0, p1);
-        NodeData b = new Node(1, p2);
-        NodeData c = new Node(2, p3);
-        NodeData d = new Node(3, p4);
-        NodeData e = new Node(4, p5);
-
-        EdgeData e1 = new Edge(0, 3, 1.0);
-        EdgeData e2 = new Edge(0, 2, 2.0);
-        EdgeData e3 = new Edge(1, 2, 3.5);
-        EdgeData e4 = new Edge(4, 1, 5.3);
-        EdgeData e5 = new Edge(3, 2, 2.4);
-
-        MyDWG dwg = new MyDWG();
-        dwg.connect(e1.getSrc(), e1.getDest(),e1.getWeight());
-        dwg.connect(e2.getSrc(), e2.getDest(),e2.getWeight());
-        dwg.connect(e3.getSrc(), e3.getDest(),e3.getWeight());
-        dwg.connect(e4.getSrc(), e4.getDest(),e4.getWeight());
-        dwg.connect(e5.getSrc(), e5.getDest(),e5.getWeight());
-
-
+    public GraphTest() {
+        dwg.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
+        dwg.connect(e2.getSrc(), e2.getDest(), e2.getWeight());
+        dwg.connect(e3.getSrc(), e3.getDest(), e3.getWeight());
+        dwg.connect(e4.getSrc(), e4.getDest(), e4.getWeight());
+        dwg.connect(e5.getSrc(), e5.getDest(), e5.getWeight());
 
         dwg.addNode(a);
         dwg.addNode(b);
@@ -62,11 +42,9 @@ public class GraphTest {
         dwg.addNode(e);
         System.out.println(dwg);
         MyDWGAlgorithm algorithm = new MyDWGAlgorithm();
-        System.out.println(algorithm.shortestPathDist(a.getKey(),b.getKey()));
+        System.out.println(algorithm.shortestPathDist(a.getKey(), b.getKey()));
         System.out.println();
-
     }
-
 
     @Test
     void getNode() {
