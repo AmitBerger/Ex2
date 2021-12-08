@@ -285,7 +285,9 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 //    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-
+        if (cities.size() == 1){
+            return cities;
+        }
 //      filling the shortestPathDist matrix
         List<NodeData> ans = new LinkedList<>();
         Stack<Integer> stack = new Stack<>();
@@ -310,10 +312,10 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         MyDWGAlgorithm mat = new MyDWGAlgorithm();
         mat.init(matrix);
 
-        int element, dst = 0, i;
-        double min , total = 0;
+        int element =0, dst = 0, i=0;
+        double min =Double.MAX_VALUE, total = 0;
         boolean minFlag = false;
-        NodeData firstNode = mat.center();
+        NodeData firstNode = cities.iterator().next();
         if (firstNode == null){
             return null;
         }
@@ -349,7 +351,9 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             }
             stack.pop();
         }
-        System.out.println(total);
+        if (ans.size() != cities.size()){
+            return null;
+        }
         return ans;
     }
 
@@ -411,14 +415,14 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         System.out.println(g.shortestPath(2, 3));
 
 //        List<NodeData> cities = new LinkedList<>();
-        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
-        while (nodeIter.hasNext()) {
-            NodeData node = nodeIter.next();
-            Iterator<EdgeData> edge = g.graph.edgeIter(node.getKey());
-            while (edge.hasNext()){
-                System.out.println(edge.next());
-            }
-        }
+//        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
+//        while (nodeIter.hasNext()) {
+//            NodeData node = nodeIter.next();
+//            Iterator<EdgeData> edge = g.graph.edgeIter(node.getKey());
+//            while (edge.hasNext()){
+//                System.out.println(edge.next());
+//            }
+//        }
 //        System.out.println(g.tsp(cities));
 //        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
 //        while (edgeIter.hasNext()){

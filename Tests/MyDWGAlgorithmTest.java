@@ -102,12 +102,19 @@ class MyDWGAlgorithmTest {
 
     @org.junit.jupiter.api.Test
     void copy() {
+        long start = new Date().getTime();
         DirectedWeightedGraph g = algorithm.copy();
         isTheSame(g, dwg);
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
+
     }
 
     @org.junit.jupiter.api.Test
     void isConnected() {
+        long start = new Date().getTime();
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         g.load("data/CompleteG.json");
         assertTrue(g.isConnected());
@@ -125,10 +132,16 @@ class MyDWGAlgorithmTest {
         // 47 is not connected
         g.load("data/NotConnectedG2.json");
         assertFalse(g.isConnected());
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
+
     }
 
     @org.junit.jupiter.api.Test
     void isNodeConnected() {
+        long start = new Date().getTime();
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         DirectedWeightedGraph graph = g.getGraph();
         g.load("data/CompleteG.json");
@@ -155,10 +168,17 @@ class MyDWGAlgorithmTest {
         graph = g.getGraph();
         assertTrue(g.isNodeConnected(graph, graph.getNode(47)));
         assertFalse(g.isNodeConnected(graph, graph.getNode(45)));
+
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
+
     }
 
     @org.junit.jupiter.api.Test
     void shortestPathDist() {
+        long start = new Date().getTime();
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         DirectedWeightedGraph graph = g.getGraph();
         g.load("data/CompleteG.json");
@@ -186,11 +206,16 @@ class MyDWGAlgorithmTest {
         assertEquals(-1, g.shortestPathDist(2, 1));
         // Input node do not exist
         assertEquals(-1, g.shortestPathDist(2, -1));
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
 
     }
 
     @org.junit.jupiter.api.Test
     void shortestPath() {
+        long start = new Date().getTime();
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         g.load("data/NotConnectedG.json");
         DirectedWeightedGraph graph = g.getGraph();
@@ -225,10 +250,17 @@ class MyDWGAlgorithmTest {
         assertNull(g.shortestPath(2, 1));
         // Input node do not exist
         assertNull(g.shortestPath(2, -1));
+
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
+
     }
 
     @org.junit.jupiter.api.Test
     void center() {
+        long start = new Date().getTime();
         MyDWGAlgorithm g = new MyDWGAlgorithm();
         g.load("data/G1.json");
         DirectedWeightedGraph graph = g.getGraph();
@@ -246,10 +278,61 @@ class MyDWGAlgorithmTest {
         graph = g.getGraph();
         assertEquals(graph.getNode(3), g.center());
 
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
+
     }
 
     @org.junit.jupiter.api.Test
     void tsp() {
+        long start = new Date().getTime();
+        MyDWGAlgorithm g = new MyDWGAlgorithm();
+        g.load("data/G1.json");
+        DirectedWeightedGraph graph = g.getGraph();
+        List<NodeData> cities = new LinkedList<>();
+        cities.add(graph.getNode(0));
+        cities.add(graph.getNode(1));
+        cities.add(graph.getNode(2));
+        cities.add(graph.getNode(3));
+        assertEquals(cities, g.tsp(cities));
+//      One node case
+        List<NodeData> ans = new LinkedList<>();
+        ans.add(graph.getNode(0));
+        assertEquals(ans,g.tsp(ans));
+
+        List<NodeData> cities2 = new LinkedList<>();
+        Iterator<NodeData> node = graph.nodeIter();
+        while (node.hasNext()){
+            NodeData n = node.next();
+            cities2.add(n);
+        }
+        assertEquals(cities2, g.tsp(cities2));
+
+        List<NodeData> cities3 = new LinkedList<>();
+        g.load("data/MyG.json");
+        DirectedWeightedGraph graph1 = g.getGraph();
+        node = graph1.nodeIter();
+        while (node.hasNext()){
+            NodeData n = node.next();
+            cities2.add(n);
+            cities3.add(n);
+        }
+        // Size to big
+        assertNull(g.tsp(cities2));
+        ans = new LinkedList<>();
+        ans.add(graph1.getNode(0));
+        ans.add(graph1.getNode(4));
+        ans.add(graph1.getNode(3));
+        ans.add(graph1.getNode(2));
+        ans.add(graph1.getNode(1));
+        assertEquals(ans, g.tsp(cities3));
+
+        long end = new Date().getTime();
+        double dt = (end - start) / 1000.0;
+        assertTrue(dt < 1);
+        System.out.println("runTimeTwoMillionNodes: " + dt);
 
     }
 
@@ -319,74 +402,31 @@ class MyDWGAlgorithmTest {
     }
 
     @org.junit.jupiter.api.Test
-    void runTimeMillionNodes() {
+    void runTimeMillionNodesGraphBuild() {
         long start = new Date().getTime();
-        int size =6;
+        int size =1000000;
         for (int i = 0; i < size; i++) {
             Node temp = new Node(i);
             empty.addNode(temp);
         }
 
         double w = 0.1;
-        List<NodeData> cities = new LinkedList<>();
         for (int i = 0; i < size; i++) {
             w += 0.2;
-            for (int j = i + 1; j < size && j < i + 21; j++) {
+            for (int j = i + 1; j < (size -50) && j < i + 21; j++) {
                 w += 0.1;
                 empty.connect(i, j, w);
             }
-            if (i == 0) {
-                empty.connect(0, i+1, w);
-            } else if (i%20 == 0){
+            if ( i % 20 == 0 && i!=0){
                 empty.connect(i, i - 20, w);
-            }
-            if (i % 1000 == 0) {
-                cities.add(empty.getNode(i));
             }
         }
         EmptyAlgorithm.init(empty);
-        Iterator<NodeData> nodeIter = EmptyAlgorithm.getGraph().nodeIter();
-        while (nodeIter.hasNext()) {
-            NodeData node = nodeIter.next();
-            Iterator<EdgeData> edge = EmptyAlgorithm.getGraph().edgeIter(node.getKey());
-            while (edge.hasNext()){
-                System.out.println(edge.next());
-            }
-        }
+        assertEquals(EmptyAlgorithm.getGraph().nodeSize(), size);
         long end = new Date().getTime();
         double dt = (end - start) / 1000.0;
         assertTrue(dt < 5);
         System.out.println("runTimeTwoMillionNodes: " + dt);
-
-        EmptyAlgorithm.shortestPathDist(0, 8862);
-        end = new Date().getTime();
-        dt = (end - start) / 1000.0;
-        System.out.println("runTimeTwoMillionNodes: " + dt);
-        assertTrue(dt < 10);
-
-        EmptyAlgorithm.shortestPath(randomInt(0,10000), randomInt(235,436345));
-        end = new Date().getTime();
-        dt = (end - start) / 1000.0;
-        System.out.println("runTimeTwoMillionNodes: " + dt);
-        assertTrue(dt < 15);
-
-        EmptyAlgorithm.isConnected();
-        end = new Date().getTime();
-        dt = (end - start) / 1000.0;
-        System.out.println("runTimeTwoMillionNodes: " + dt);
-        assertTrue(dt < 20);
-
-//        EmptyAlgorithm.center();
-//        end = new Date().getTime();
-//        dt = (end - start) / 1000.0;
-//        System.out.println("runTimeTwoMillionNodes: " + dt);
-//        assertTrue(dt < 6);
-
-        EmptyAlgorithm.tsp(cities);
-        end = new Date().getTime();
-        dt = (end - start) / 1000.0;
-        System.out.println("runTimeTwoMillionNodes: " + dt);
-//        assertTrue(dt < 10);
 
     }
 
