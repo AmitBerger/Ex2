@@ -1,8 +1,5 @@
 
-import api.DirectedWeightedGraph;
-import api.DirectedWeightedGraphAlgorithms;
-import api.EdgeData;
-import api.NodeData;
+import api.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -444,7 +441,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     public boolean load(String file) {
         JsonObject myJsonObject;
         String fileData;
-        DirectedWeightedGraph newGraph = new MyDWG();
+        MyDWG newGraph = new MyDWG();
         try {
             fileData = new String(Files.readAllBytes(Paths.get(file)));
 
