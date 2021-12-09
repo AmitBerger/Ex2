@@ -11,50 +11,31 @@ public class Node implements NodeData, Comparable<Node>{
     private int tag;
     private String info;
     private Location geo;
-    HashMap<Integer, EdgeData> Edges;
-    HashMap<Integer, EdgeData> towardsMeEdges;
-    HashMap<Integer, EdgeData> fromMeEdges;
 
     public Node(int key, Location geo) {
 
         this.key = key;
         this.weight = 0;
         this.tag = 0;
-        this.info = geo.x()+ "," + geo.y();
+        this.info = geo.x() + "," + geo.y();
         this.geo = geo;
-        Edges = new HashMap<>();
-        fromMeEdges = new HashMap<>();
-        towardsMeEdges = new HashMap<>();
     }
+
     public Node(NodeData n) {
 
         this.key = n.getKey();
         this.weight = n.getWeight();
         this.tag = n.getTag();
-        this.info = n.getLocation().x()+ "," + n.getLocation().y();
+        this.info = n.getLocation().x() + "," + n.getLocation().y();
         this.geo = (Location) n.getLocation();
-        Edges = new HashMap<>();
-        fromMeEdges = new HashMap<>();
-        towardsMeEdges = new HashMap<>();
     }
 
-    public Node(int id){
+    public Node(int id) {
         this.key = id;
         this.weight = 0;
         this.tag = 0;
-        this.info = "";
-        this.geo = new Location(0,0,0);
-        Edges = new HashMap<>();
-        fromMeEdges = new HashMap<>();
-        towardsMeEdges = new HashMap<>();
-    }
-
-    public EdgeData getNodeEdge(int key) {
-        EdgeData desiredNode = Edges.get(key);
-        return desiredNode;
-    }
-
-    public Node(int id, String pos) {
+        this.info = "0.0,0.0";
+        this.geo = new Location(0, 0, 0);
     }
 
     @Override
@@ -78,9 +59,7 @@ public class Node implements NodeData, Comparable<Node>{
     }
 
     @Override
-    public int getTag() {
-        return this.tag;
-    }
+    public int getTag() {return this.tag;}
 
     @Override
     public String getInfo() {
@@ -102,20 +81,10 @@ public class Node implements NodeData, Comparable<Node>{
         this.tag = t;
     }
 
-    public void addEdge(Edge e, Boolean fromMe){
-        if (fromMe){
-            this.fromMeEdges.put(this.fromMeEdges.size(),e);
-        }
-        else{
-            this.towardsMeEdges.put(this.towardsMeEdges.size(),e);
-        }
-        this.Edges.put(this.Edges.size(),e);
-    }
-
     @Override
     public String toString() {
         return "Node{" +
-                "key=" + key +", "+"Tag="+ this.tag+
+                "key=" + key + ", " + "Tag=" + this.tag +
                 '}';
     }
 
