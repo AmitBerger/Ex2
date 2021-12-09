@@ -128,7 +128,7 @@ public class ButtonsPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
             mode = MyGUI.InputMode.IS_CONNECTED;
             String text = "" + GUI.canvas.graphAlgo.isConnected();
-            GUI.Console.setText("connected == "+text);
+            GUI.Console.setText("IsConnected? == "+text);
         }
     }
 

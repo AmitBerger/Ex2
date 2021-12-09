@@ -5,13 +5,16 @@ import api.NodeData;
 import org.w3c.dom.css.RGBColor;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class GraphCanvas extends JPanel {
+public class GraphCanvas extends JPanel implements ActionListener {
     /**
      * The Graph
      */
@@ -25,19 +28,23 @@ public class GraphCanvas extends JPanel {
     public double NodeMinY = Double.MAX_VALUE;
     public double NodeMaxX = Double.MIN_VALUE;
     public double NodeMaxY = Double.MIN_VALUE;
-
     final int BLACK = 0;
     final int BLUE = 0;
     final int ORANGE = 0;
+    MyGUI gui;
 
     String fileName = "data/G3.json";
 
-    /** Constructor */
+
+    /**
+     * Constructor
+     */
     public GraphCanvas() {
         graphAlgo = new MyDWGAlgorithm();
         graphAlgo.load(fileName);
         graph = graphAlgo.getGraph();
         getMinMaxValues();
+
     }
 
     public GraphCanvas(String file) {
@@ -79,8 +86,8 @@ public class GraphCanvas extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         double dx = NodeMaxX - NodeMinX;
         double dy = NodeMaxY - NodeMinY;
-        double xScaled = (width / dx)*0.75;
-        double yScaled = (width / dy) *0.75;
+        double xScaled = (width / dx) * 0.75;
+        double yScaled = (width / dy) * 0.75;
 
         g2d.setPaint(Color.BLACK);
         Iterator<EdgeData> edgeIter = graph.edgeIter();
@@ -88,33 +95,33 @@ public class GraphCanvas extends JPanel {
             EdgeData edge = edgeIter.next();
             GeoLocation geo1 = this.graph.getNode(edge.getSrc()).getLocation();
             GeoLocation geo2 = this.graph.getNode(edge.getDest()).getLocation();
-            double x1 = (int)((geo1.x() - NodeMinX) * xScaled*0.97 + 30);
-            double y1 = (int)((geo1.y() - NodeMinY) * yScaled*0.97 + 30);
-            double x2 = (int)(((geo2).x() - NodeMinX) * xScaled*0.97 + 30);
-            double y2 = (int)((geo2.y() - NodeMinY) * yScaled*0.97 + 30);
+            double x1 = (int) ((geo1.x() - NodeMinX) * xScaled * 0.97 + 30);
+            double y1 = (int) ((geo1.y() - NodeMinY) * yScaled * 0.97 + 30);
+            double x2 = (int) (((geo2).x() - NodeMinX) * xScaled * 0.97 + 30);
+            double y2 = (int) ((geo2.y() - NodeMinY) * yScaled * 0.97 + 30);
             g2d.setStroke(new BasicStroke(1));
-            g2d.draw(new Line2D.Double(x1+15, y1+15, x2+15, y2+15));
-            drawArrowHead(g2d, Math.atan2(y2 - y1+15, x2 - x1+15), x2+15, y2+15);
+            g2d.draw(new Line2D.Double(x1 + 15, y1 + 15, x2 + 15, y2 + 15));
+            drawArrowHead(g2d, Math.atan2(y2 - y1 + 15, x2 - x1 + 15), x2 + 15, y2 + 15);
         }
 
         Iterator<NodeData> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData node = nodeIter.next();
             // Linearly map the point
-            double x = (node.getLocation().x() - NodeMinX)*xScaled*0.97+30;
-            double y = (node.getLocation().y() - NodeMinY)*yScaled*0.97+30;
-            if (node.getTag() == 0){
+            double x = (node.getLocation().x() - NodeMinX) * xScaled * 0.97 + 30;
+            double y = (node.getLocation().y() - NodeMinY) * yScaled * 0.97 + 30;
+            if (node.getTag() == 0) {
                 g.setColor(Color.BLACK);
-            }else if(node.getTag()==1){
+            } else if (node.getTag() == 1) {
                 g.setColor(Color.BLUE);
-            }else{
+            } else {
                 g.setColor(Color.ORANGE);
             }
             g.drawOval((int) x, (int) y, 30, 30);
             Font f = new Font("ariel", Font.BOLD, 16);
             g.setFont(f);
             g.setColor(Color.BLACK);
-            g.drawString(node.getKey() + "", (int) x, (int) y-5);
+            g.drawString(node.getKey() + "", (int) x, (int) y - 5);
         }
     }
 
@@ -132,7 +139,7 @@ public class GraphCanvas extends JPanel {
         g2.draw(new Line2D.Double(x0, y0, x, y));
     }
 
-    public void refresh(){
+    public void refresh() {
         repaint();
     }
 
@@ -140,40 +147,43 @@ public class GraphCanvas extends JPanel {
         this.size = new Dimension(width, height);
         return size;
     }
+
     private void UpdateSize() {
-        this.size = new Dimension(this.getWidth(),this.getHeight());
+        this.size = new Dimension(this.getWidth(), this.getHeight());
         this.setSize(size);
     }
 
     public Dimension getSize() {
         return size;
     }
+
     /**
      * Paint the traversal path to red
+     *
      * @param path the list of edges in the traversal path
      * @return whether there is a traversal to paint or not
      */
-    public Boolean paintTraversal(LinkedList<EdgeData> path){
+    public Boolean paintTraversal(LinkedList<EdgeData> path) {
         boolean painting;
-        if (path.isEmpty()){
+        if (path.isEmpty()) {
             painting = false;
             return painting;
         } else {
             painting = true;
         }
         // set every thing to gray, and set the start point to orange
-        Iterator<EdgeData> edgeIter =graph.edgeIter();
-        while (edgeIter.hasNext()){
+        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        while (edgeIter.hasNext()) {
             edgeIter.next().setTag(Color.black.getRGB());
         }
         Iterator<NodeData> nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext()){
+        while (nodeIter.hasNext()) {
             nodeIter.next().setTag(Color.lightGray.getRGB());
         }
         path.get(0).setTag(Color.ORANGE.getRGB());
         repaint();
 
-        for (EdgeData edge:path){
+        for (EdgeData edge : path) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ignore) {
@@ -191,6 +201,27 @@ public class GraphCanvas extends JPanel {
             repaint();
         }
         return painting;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JMenuItem source = (JMenuItem) e.getSource();
+
+        if (source == gui.load_tab) {
+            JFileChooser j = new JFileChooser("data/");
+            j.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json files", "json");
+            j.addChoosableFileFilter(filter);
+            int r = j.showOpenDialog(null);
+            if (r == JFileChooser.APPROVE_OPTION) {
+                String file_path = j.getSelectedFile().getAbsolutePath();
+
+                MyDWGAlgorithm GA = new MyDWGAlgorithm();
+                GA.load(file_path);
+
+            }
+        }
+
     }
 
 }

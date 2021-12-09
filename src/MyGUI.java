@@ -3,12 +3,12 @@ import api.GeoLocation;
 import api.NodeData;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class MyGUI extends JFrame {
 
@@ -51,22 +51,19 @@ public class MyGUI extends JFrame {
      * Constructors
      */
     public MyGUI() {
-        canvas = new GraphCanvas();
-        fileName = canvas.fileName;
         buttons = new ButtonsPanel(this);
         this.setResizable(true);
-        SetFrame();
-        Menu();
+        SetFrame(false);
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
 
-    public MyGUI(String file) {
+    public void Init(String file) {
+        buttons = new ButtonsPanel(this);
         canvas = new GraphCanvas(file);
         fileName = canvas.fileName;
         this.setResizable(true);
-        SetFrame();
-        Menu();
+        SetFrame(true);
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
@@ -86,20 +83,21 @@ public class MyGUI extends JFrame {
     /**
      * Creat the GUI window
      */
-    private void SetFrame() {
+    private void SetFrame(boolean flag) {
         // Adding a nice window decorations.           works?
         JFrame.setDefaultLookAndFeelDecorated(true);
-
         // Create and set the window.
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         // Add components.
-        SetPanels();
-
+        if (flag) {
+            SetPanels();
+        }
+        Menu();
         // Displays the window.
         this.pack();
         this.setVisible(true);
     }
+
 
     /**
      * Creat & displays the buttons & graph
@@ -167,6 +165,17 @@ public class MyGUI extends JFrame {
     private class MENUListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             mode = InputMode.MENU;
+            JFileChooser j = new JFileChooser("data/");
+            j.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json files", "json");
+            j.addChoosableFileFilter(filter);
+            int r = j.showOpenDialog(null);
+            if (r == JFileChooser.APPROVE_OPTION) {
+                String file_path = j.getSelectedFile().getAbsolutePath();
+                  Init(file_path);
+
+
+            }
         }
     }
 
