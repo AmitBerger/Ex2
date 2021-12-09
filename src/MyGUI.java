@@ -12,43 +12,33 @@ import java.util.Set;
 
 public class MyGUI extends JFrame {
 
-    private GraphCanvas canvas;
+    GraphCanvas canvas;
 
 //    JFrame frame;
+    JMenuBar j_Menu_Bar;
+    JMenu file_tab;
+    JMenuItem save_tab, load_tab;
+
 
     /**
      * Label for the instructions
      */
-    private JLabel Console;
+    JLabel Console;
     /**
      * Buttons for the user:
      */
-    private JButton addNodeButton;
-    private JButton removeNodeButton;
-    private JButton addEdgeButton;
-    private JButton removeEdgeButton;
-    private JButton refreshButton;
-    private JButton shortestPathButton;
-    private JButton centerButton;
-    private JButton isConnectedButton;
-    private JButton tspButton;
 
-    /**
-     * Text fields to get input from user
-     */
-    private JTextField SP_SRC;
-    private JTextField SP_DST;
-    private JTextField TSP_CITIES;
-
+    JButton refreshButton;
+    JButton shortestPathButton;
     /**
      * The input mode - default: Add nodes button
      */
-    private InputMode mode = InputMode.ADD_NODES;
+    InputMode mode = InputMode.ADD_NODES;
 
     /**
      * Stores last mousedown event position
      */
-    private NodeData nodeUnderMouse;
+    NodeData nodeUnderMouse;
 
     List<NodeData> tsp_cities;
 
@@ -56,14 +46,17 @@ public class MyGUI extends JFrame {
 
     Container pane;
 
+    ButtonsPanel buttons;
     /**
      * Constructors
      */
     public MyGUI() {
         canvas = new GraphCanvas();
         fileName = canvas.fileName;
+        buttons = new ButtonsPanel(this);
         this.setResizable(true);
         SetFrame();
+        Menu();
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
@@ -73,16 +66,29 @@ public class MyGUI extends JFrame {
         fileName = canvas.fileName;
         this.setResizable(true);
         SetFrame();
+        Menu();
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
 
+    public void Menu(){
+        j_Menu_Bar = new JMenuBar();
+        file_tab = new JMenu("File");
+        save_tab = new JMenuItem("Save");
+        load_tab = new JMenuItem("Load");
+        file_tab.add(save_tab);
+        file_tab.add(load_tab);
+        save_tab.addActionListener(new MENUListener());
+        load_tab.addActionListener(new MENUListener());
+        j_Menu_Bar.add(file_tab);
+        setJMenuBar(j_Menu_Bar);
+    }
     /**
      * Creat the GUI window
      */
     private void SetFrame() {
         // Adding a nice window decorations.           works?
-//        setDefaultLookAndFeelDecorated(true);
+        JFrame.setDefaultLookAndFeelDecorated(true);
 
         // Create and set the window.
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -122,27 +128,7 @@ public class MyGUI extends JFrame {
 
     private void addPanel2() {
         // build graph buttons
-        JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.GRAY);
-        // Sets the table for the buttons
-        panel2.setLayout(new GridLayout(4, 1));
-
-        addNodeButton = new JButton("Add Nodes");
-        panel2.add(addNodeButton);
-        addNodeButton.addActionListener(new AddNodeListener());
-
-        removeNodeButton = new JButton("Remove Nodes");
-        panel2.add(removeNodeButton);
-        removeNodeButton.addActionListener(new RmvNodeListener());
-
-        addEdgeButton = new JButton("Add Edges");
-        panel2.add(addEdgeButton);
-        addEdgeButton.addActionListener(new AddEdgeListener());
-
-        removeEdgeButton = new JButton("Remove Edges");
-        panel2.add(removeEdgeButton);
-        removeEdgeButton.addActionListener(new RmvEdgeListener());
-        pane.add(panel2);
+        pane.add(buttons);
     }
 
     private void addPanel3() {
@@ -153,11 +139,11 @@ public class MyGUI extends JFrame {
         refreshButton = new JButton("Refresh");
         panel3.add(refreshButton);
         refreshButton.addActionListener(new RFListener());
-        pane.add(panel3);
 
-        shortestPathButton = new JButton("Topological Sort");
+        shortestPathButton = new JButton("Shortest Path");
         panel3.add(shortestPathButton);
         shortestPathButton.addActionListener(new SPListener());
+        pane.add(panel3);
     }
 
     /**
@@ -175,51 +161,17 @@ public class MyGUI extends JFrame {
      * Constants for recording the input mode
      */
     enum InputMode {
-        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES
+        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES,MENU
     }
 
-    /**
-     * Listener for Add Node button
-     */
-    private class AddNodeListener implements ActionListener {
+    private class MENUListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = InputMode.ADD_NODES;
-            Console.setText("Click to add new nodes or change their location.");
+            mode = InputMode.MENU;
         }
     }
 
     /**
-     * Listener for Remove Node button
-     */
-    private class RmvNodeListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.RMV_NODES;
-            Console.setText("Click on a node to remove.");
-        }
-    }
-
-    /**
-     * Listener for Add Edge button
-     */
-    private class AddEdgeListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.ADD_EDGES;
-            Console.setText("Drag from one node to another to add an edge.");
-        }
-    }
-
-    /**
-     * Listener for Remove Edge button
-     */
-    private class RmvEdgeListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.RMV_EDGES;
-            Console.setText("Drag from one node to another to remove an edge.");
-        }
-    }
-
-    /**
-     * Listener for Refresh button
+     * Listener for SP button
      */
     private class SPListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -229,59 +181,19 @@ public class MyGUI extends JFrame {
     }
 
     /**
-     * Listener for IsConnected button
-     */
-    private class IsConnectedListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.IS_CONNECTED;
-            Console.setText("The graph is connected ==");
-        }
-    }
-
-    /**
-     * Listener for Center button
-     */
-    private class CenterListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.CENTER;
-            Console.setText("The center is:");
-        }
-    }
-
-    /**
-     * Listener for shortest path src text field
-     */
-    private class SP_SRCListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.SP_SRC;
-            Console.setText("Enter the source node key");
-        }
-    }
-
-    /**
-     * Listener for shortest path dst text field
-     */
-    private class SP_DSTListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.SP_DST;
-            Console.setText("Enter the destination node key");
-        }
-    }
-
-    /**
      * Listener for Refresh Path button
      */
     private class RFListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             refresh();
-            addNodeButton.setEnabled(true);
-            removeNodeButton.setEnabled(true);
-            addEdgeButton.setEnabled(true);
-            removeEdgeButton.setEnabled(true);
+            buttons.addNodeButton.setEnabled(true);
+            buttons.removeNodeButton.setEnabled(true);
+            buttons.addEdgeButton.setEnabled(true);
+            buttons.removeEdgeButton.setEnabled(true);
             refreshButton.setEnabled(true);
-//            shortestPathButton.setEnabled(true);
-//            isConnectedButton.setEnabled(true);
-//            centerButton.setEnabled(true);
+            shortestPathButton.setEnabled(true);
+            buttons.isConnectedButton.setEnabled(true);
+            buttons.centerButton.setEnabled(true);
             Console.setText("Refreshed");
         }
     }
@@ -367,12 +279,12 @@ public class MyGUI extends JFrame {
                 break;
 
             case RMV_EDGES:
-                if (nodeUnderMouse != null && nearbyNode != null && nearbyNode != nodeUnderMouse) {
+                if (nodeUnderMouse != null) {
                     if (canvas.graph.getEdge(nodeUnderMouse.getKey(),nearbyNode.getKey()) != null){
                         canvas.graph.removeEdge(nodeUnderMouse.getKey(),nearbyNode.getKey());
+                        refresh();
+                        worked = true;
                     }
-                    refresh();
-                    worked = true;
                 }
                 if (!worked) {
                     Toolkit.getDefaultToolkit().beep();
@@ -380,10 +292,12 @@ public class MyGUI extends JFrame {
                 break;
         }
     }
-
+    @SuppressWarnings("unchecked")
     public void mouseDragged(MouseEvent e) {
         // test if the mouse is dragging something
-        if (mode == InputMode.ADD_EDGES && nodeUnderMouse != null) {
+        if (mode == InputMode.ADD_EDGES && nodeUnderMouse != null
+                && e.getX()>=15 && e.getY()>=15
+                && e.getX()<=(canvas.width - 15) && e.getY()<=(canvas.height-15)) {
             nodeUnderMouse.setLocation(new Location(e.getX(), e.getY(), 0.0));
             refresh();
         }
@@ -397,7 +311,7 @@ public class MyGUI extends JFrame {
     public void refresh() {
 //        new MyGUI(fileName);
 //        this.getContentPane().removeAll();
-        this.repaint();
+        canvas.repaint();
     }
     /** Worker class for doing traversals */
     private class TraversalThread extends SwingWorker<Boolean, Object> {
@@ -411,10 +325,10 @@ public class MyGUI extends JFrame {
 
         @Override
         public Boolean doInBackground() {
-            addNodeButton.setEnabled(false);
-            removeNodeButton.setEnabled(false);
-            addEdgeButton.setEnabled(false);
-            removeEdgeButton.setEnabled(false);
+            buttons.addNodeButton.setEnabled(false);
+            buttons.removeNodeButton.setEnabled(false);
+            buttons.addEdgeButton.setEnabled(false);
+            buttons.removeEdgeButton.setEnabled(false);
             refreshButton.setEnabled(false);
             return canvas.paintTraversal(path);
         }

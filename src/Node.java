@@ -83,9 +83,7 @@ public class Node implements NodeData, Comparable<Node>{
 
     @Override
     public String toString() {
-        return "Node{" +
-                "key=" + key + ", " + "Tag=" + this.tag +
-                '}';
+        return "Node{"+ key+"}";
     }
 
     @Override
