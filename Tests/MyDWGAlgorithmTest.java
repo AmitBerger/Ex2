@@ -63,9 +63,6 @@ class MyDWGAlgorithmTest {
         algorithm.init(dwg);
     }
 
-    @org.junit.jupiter.api.AfterEach
-    void tearDown() {
-    }
 
     @org.junit.jupiter.api.Test
     void init() {

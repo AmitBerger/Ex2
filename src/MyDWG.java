@@ -70,18 +70,18 @@ public class MyDWG implements DirectedWeightedGraph {
             return;
         }
         Edge givenEdge = new Edge(src, dest, w);
-        if (!this.edgeList.containsKey(src)){
+        if (!this.edgeList.containsKey(src)) {
             HashMap<Integer, EdgeData> newEdge = new HashMap<>();
             newEdge.put(dest, givenEdge);
             this.edgeList.put(src, newEdge);
-        }else{
-            if (this.edgeList.get(src).containsKey(dest)){
+        } else {
+            if (this.edgeList.get(src).containsKey(dest)) {
                 this.edgeSize--;
             }
-            this.edgeList.get(src).put(dest,givenEdge);
+            this.edgeList.get(src).put(dest, givenEdge);
         }
 
-        this.nodeList.get(src).setWeight(this.nodeList.get(src).getWeight() +1);       // need to fix always increasing
+        this.nodeList.get(src).setWeight(this.nodeList.get(src).getWeight() + 1);       // need to fix always increasing
         this.edgeSize++;
         mc++;
     }
@@ -143,8 +143,7 @@ public class MyDWG implements DirectedWeightedGraph {
                 if (!currentNodeEdges.hasNext()) {
                     if (!SrcKeySet.hasNext()) {
                         return false;
-                    }
-                    else{
+                    } else {
                         currentKeyPos = SrcKeySet.next();
                         currentNodeEdges = edgeIter(currentKeyPos);
                     }
@@ -171,7 +170,7 @@ public class MyDWG implements DirectedWeightedGraph {
                 while (currentPos != last) {
                     currentNodeEdges.next();
                 }
-                while (currentKeyPos != lastKey){
+                while (currentKeyPos != lastKey) {
                     SrcKeySet.next();
                 }
             }
@@ -203,7 +202,7 @@ public class MyDWG implements DirectedWeightedGraph {
                 }
                 lastPos = currentPos;
                 currentPos = edgesKeySet.next();
-                return getEdge(node_id,currentPos);
+                return getEdge(node_id, currentPos);
             }
 
             @Override
