@@ -4,7 +4,7 @@ import api.NodeData;
 
 import java.util.HashMap;
 
-public class Node implements NodeData {
+public class Node implements NodeData, Comparable<Node>{
 
     private int key;
     private double weight;
@@ -117,5 +117,10 @@ public class Node implements NodeData {
         return "Node{" +
                 "key=" + key +", "+"Tag="+ this.tag+
                 '}';
+    }
+
+    @Override
+    public int compareTo(Node o) {
+        return Double.compare(this.getWeight(), o.getWeight());
     }
 }

@@ -15,9 +15,11 @@ import java.util.*;
 
 public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
+
     private DirectedWeightedGraph graph;
     final int Visited = 1;
     final int NotYetVisited = 0;
+    public static double total = 0;
 
     public MyDWGAlgorithm() {
         this.graph = new MyDWG();
@@ -246,46 +248,113 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return nodesList;
     }
 
+    private void dijkstra(int src) {
+        PriorityQueue<NodeData> NodeQ = new PriorityQueue<>();
+      //  HashMap<Integer, Integer> prev = new HashMap<>();
+        Iterator<NodeData> iter = this.graph.nodeIter();
+        while (iter.hasNext()) {
+            NodeData tempNode = iter.next();
+            if (tempNode.getKey() == src) {
+                tempNode.setWeight(0.0);
+              //  prev.put(tempNode.getKey(), null);
+            } else {
+                tempNode.setWeight(Double.MAX_VALUE);
+             //   prev.put(tempNode.getKey(), -1);
+            }
+            NodeQ.add(tempNode);
+        }
+
+        while (!NodeQ.isEmpty()) {
+            NodeData checkerNode = NodeQ.remove();
+            Iterator<EdgeData> iterC = this.graph.edgeIter(checkerNode.getKey());
+            while (iterC.hasNext()) {
+
+                Edge neighboursEdge = (Edge) iterC.next();
+                Node neighbourNode = (Node) this.graph.getNode(neighboursEdge.getDest());
+
+                double bestW = checkerNode.getWeight() + neighboursEdge.getWeight();
+                if (bestW < neighbourNode.getWeight()) {
+                    neighbourNode.setWeight(bestW);
+                   // prev.replace(neighbourNode.getKey(), checkerNode.getKey());
+                    NodeQ.remove(neighbourNode);
+                    NodeQ.add(neighbourNode);
+                }
+            }
+        }
+
+    }
+
     @Override
     public NodeData center() {
-        // if the graph in not strongly connected -> return null
+
         if (!this.isConnected()) {
             return null;
         }
-        double min_max_SP = Integer.MAX_VALUE;
-        int chosenNode = -1;
-        Iterator<NodeData> iter = this.graph.nodeIter();
-        while (iter.hasNext()) {
-            int node = iter.next().getKey();
-            // find the maximum shortest path for each node
-            double max_SP = maxShortestPath(node);
-            if (max_SP < min_max_SP) {
-                min_max_SP = max_SP;
-                chosenNode = node;
+
+        Node center = null;
+        double bestDist = Double.MAX_VALUE;
+        Iterator<NodeData> dijkstraIter = this.graph.nodeIter();
+        while (dijkstraIter.hasNext()) {
+            Node ansNode = (Node) dijkstraIter.next();
+            dijkstra(ansNode.getKey());
+            double temp = Double.MIN_VALUE;
+            Iterator<NodeData> tempNodeIter = this.graph.nodeIter();
+            while (tempNodeIter.hasNext()) {
+                NodeData tempNode = tempNodeIter.next();
+                if (tempNode.getWeight() > temp)
+                    temp = tempNode.getWeight();
+            }
+            if (temp < bestDist) {
+                bestDist = temp;
+                center = ansNode;
             }
         }
-        // return the node with the minimized maximum shortest path
-        return this.graph.getNode(chosenNode);
+
+        return center;
     }
 
-    private double maxShortestPath(int src) {
-        double maxS_P = 0;
-        Iterator<NodeData> iter = this.graph.nodeIter();
-        while (iter.hasNext()) {
-            NodeData N = iter.next();
-            if (N.getKey() != src) {
-                double S_P = this.shortestPathDist(src, N.getKey());
-                if (S_P > maxS_P)
-                    maxS_P = S_P;
-            }
-        }
-        return maxS_P;
-    }
+//    public NodeData center() {
+//        // if the graph in not strongly connected -> return null
+//        if (!this.isConnected()) {
+//            return null;
+//        }
+//        double min_max_SP = Integer.MAX_VALUE;
+//        int chosenNode = -1;
+//        Iterator<NodeData> iter = this.graph.nodeIter();
+//        while (iter.hasNext()) {
+//            int node = iter.next().getKey();
+//            // find the maximum shortest path for each node
+//            double max_SP = maxShortestPath(node);
+//            if (max_SP < min_max_SP) {
+//                min_max_SP = max_SP;
+//                chosenNode = node;
+//            }
+//        }
+//        // return the node with the minimized maximum shortest path
+//        return this.graph.getNode(chosenNode);
+//    }
+//
+//    private double maxShortestPath(int src) {
+//        double maxS_P = 0;
+//        Iterator<NodeData> iter = this.graph.nodeIter();
+//        while (iter.hasNext()) {
+//            NodeData N = iter.next();
+//            if (N.getKey() != src) {
+//                double S_P = this.shortestPathDist(src, N.getKey());
+//                if (S_P > maxS_P)
+//                    maxS_P = S_P;
+//            }
+//        }
+//        return maxS_P;
+//    }
 
-//    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
+    //    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
+
+
+
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        if (cities.size() == 1){
+        if (cities.size() == 1) {
             return cities;
         }
 //      filling the shortestPathDist matrix
@@ -312,11 +381,11 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         MyDWGAlgorithm mat = new MyDWGAlgorithm();
         mat.init(matrix);
 
-        int element =0, dst = 0, i=0;
-        double min =Double.MAX_VALUE, total = 0;
+        int element = 0, dst = 0, i = 0;
+        double min = Double.MAX_VALUE;
         boolean minFlag = false;
-        NodeData firstNode = cities.iterator().next();
-        if (firstNode == null){
+        NodeData firstNode = graph.nodeIter().next();
+        if (firstNode == null) {
             return null;
         }
         setAllTags(matrix, NotYetVisited);
@@ -329,7 +398,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             i = 0;
             min = Double.MAX_VALUE;
             while (i < matrix.nodeSize()) {
-                if (matrix.edgeList.get(element).get(i) != null){
+                if (matrix.edgeList.get(element).get(i) != null) {
                     double currentEdgeWeight = matrix.edgeList.get(element).get(i).getWeight();
                     if (currentEdgeWeight > 0.0 && matrix.getNode(i).getTag() == NotYetVisited) {
                         if (min > currentEdgeWeight) {
@@ -351,7 +420,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
             }
             stack.pop();
         }
-        if (ans.size() != cities.size()){
+        if (ans.size() != cities.size()) {
             return null;
         }
         return ans;
@@ -408,11 +477,24 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/CompleteG.json");
+        g.load("data/1000Nodes.json");
+        System.out.println(g.center());
 //        g.load("data/G1.json");
-        System.out.println(g.isConnected());
-        System.out.println(g.shortestPathDist(2, 3));
-        System.out.println(g.shortestPath(2, 3));
+//        System.out.println(g.isConnected());
+//        System.out.println(g.shortestPathDist(2, 3));
+//        System.out.println(g.shortestPath(2, 3));
+//        long start = new Date().getTime();
+//        List<NodeData> cities2 = new LinkedList<>();
+//        Iterator<NodeData> node = g.graph.nodeIter();
+//        while (node.hasNext()){
+//            NodeData n = node.next();
+//            cities2.add(n);
+//        }
+//        System.out.println(g.tsp(cities2));
+//        System.out.println(total);
+//        long end = new Date().getTime();
+//        double dt = (end - start) / 1000.0;
+//        System.out.println(dt);
 
 //        List<NodeData> cities = new LinkedList<>();
 //        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
