@@ -1,12 +1,10 @@
 import api.EdgeData;
-import api.GeoLocation;
 import api.NodeData;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,11 +45,11 @@ public class MyGUI extends JFrame {
     Container pane;
 
     ButtonsPanel buttons;
+    MouseListenerPanel mouse;
     /**
      * Constructors
      */
     public MyGUI() {
-        buttons = new ButtonsPanel(this);
         this.setResizable(true);
         SetFrame(false);
         this.setTitle("MY GUI");
@@ -59,8 +57,9 @@ public class MyGUI extends JFrame {
     }
 
     public void Init(String file) {
-        buttons = new ButtonsPanel(this);
         canvas = new GraphCanvas(file);
+        buttons = new ButtonsPanel(this);
+        mouse = new MouseListenerPanel(this);
         fileName = canvas.fileName;
         this.setResizable(true);
         SetFrame(true);
@@ -124,15 +123,7 @@ public class MyGUI extends JFrame {
 
     private void addPanel1() {
         // Adding the graph
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout());
-        GraphMouseListener listener = new GraphMouseListener();
-        canvas.addMouseListener(listener);
-        canvas.addMouseMotionListener(listener);
-        panel1.add(canvas);
-        Console = new JLabel(("Click to add new nodes"));
-        panel1.add(Console, BorderLayout.NORTH);
-        pane.add(panel1);
+        pane.add(mouse);
     }
 
     private void addPanel2() {
@@ -224,121 +215,13 @@ public class MyGUI extends JFrame {
         }
     }
 
-    /**
-     * Finds the nearby node(mouse location relation)
-     */
-    public NodeData findNearbyNode(GeoLocation g) {
-        NodeData nearbyNode = null;
-        Iterator<NodeData> nodeIter = canvas.graph.nodeIter();
-        while (nodeIter.hasNext()) {
-            NodeData node = nodeIter.next();
-            GeoLocation h = node.getLocation();
-            if (g.distance(h) <= 15) {
-                nearbyNode = node;
-            }
-        }
-        return nearbyNode;
-    }
-
-    /**
-     * Mouse listener for GraphCanvas element
-     */
-    private class GraphMouseListener extends MouseAdapter
-            implements MouseMotionListener {
-
-        public void mouseClicked(MouseEvent e) {
-            NodeData nearbyNode = findNearbyNode(new Location(e.getX(), e.getY(), 0.0));
-            boolean worked = false;
-            switch (mode) {
-                case ADD_NODES:
-                    if (nearbyNode == null) {
-                        int num = canvas.graph.nodeSize();
-                        canvas.graph.addNode(new Node(num,new Location(e.getX(),e.getY(),0.0)));
-                        refresh();
-                        worked = true;
-                    }
-                    if (!worked) {
-                        Toolkit.getDefaultToolkit().beep();
-                    }
-                    break;
-                case RMV_NODES:
-                    if (nearbyNode != null) {
-                        canvas.graph.removeNode(nearbyNode.getKey());
-                        refresh();
-                        worked = true;
-                    }
-                    if (!worked) {
-                        Toolkit.getDefaultToolkit().beep();
-                    }
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Records point under mousedown event
-     */
-    public void mousePressed(MouseEvent e) {
-        nodeUnderMouse = findNearbyNode(new Location(e.getX(), e.getY(), 0.0));
-    }
-
-    /**
-     * Responds to mouseup event
-     */
-    @SuppressWarnings("unchecked")
-    public void mouseReleased(MouseEvent e) {
-        NodeData nearbyNode = findNearbyNode(new Location(e.getX(), e.getY(), 0.0));
-        boolean worked = false;
-        switch (mode) {
-            case ADD_EDGES:
-                if (nodeUnderMouse != null && nearbyNode != null && nearbyNode != nodeUnderMouse) {
-                    // the user don't have to enter the distance now, the program will calculate the pixel distance
-//                        canvas.graph.addEdge((new EdgeData(-1.0)),nodeUnderMouse,nearbyNode);
-                    canvas.graph.connect(nodeUnderMouse.getKey(),nearbyNode.getKey() ,
-                            nearbyNode.getLocation().distance(nearbyNode.getLocation()));
-                    refresh();
-                    worked = true;
-                }
-                if (!worked) {
-                    Toolkit.getDefaultToolkit().beep();
-                }
-                break;
-
-            case RMV_EDGES:
-                if (nodeUnderMouse != null) {
-                    if (canvas.graph.getEdge(nodeUnderMouse.getKey(),nearbyNode.getKey()) != null){
-                        canvas.graph.removeEdge(nodeUnderMouse.getKey(),nearbyNode.getKey());
-                        refresh();
-                        worked = true;
-                    }
-                }
-                if (!worked) {
-                    Toolkit.getDefaultToolkit().beep();
-                }
-                break;
-        }
-    }
-    @SuppressWarnings("unchecked")
-    public void mouseDragged(MouseEvent e) {
-        // test if the mouse is dragging something
-        if (mode == InputMode.ADD_EDGES && nodeUnderMouse != null
-                && e.getX()>=15 && e.getY()>=15
-                && e.getX()<=(canvas.width - 15) && e.getY()<=(canvas.height-15)) {
-            nodeUnderMouse.setLocation(new Location(e.getX(), e.getY(), 0.0));
-            refresh();
-        }
-    }
-
-    public void mouseMoved(MouseEvent e) {
-        nodeUnderMouse = null;
-    }
-
     /*Repaint every thing to the default color*/
     public void refresh() {
 //        new MyGUI(fileName);
 //        this.getContentPane().removeAll();
         canvas.repaint();
     }
+
     /** Worker class for doing traversals */
     private class TraversalThread extends SwingWorker<Boolean, Object> {
         /** The path that needs to paint */
