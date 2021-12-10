@@ -68,6 +68,16 @@ public class MyGUI extends JFrame {
         this.setResizable(false);
     }
 
+    public void Load(){
+        j_Menu_Bar = new JMenuBar();
+        file_tab = new JMenu("File");
+        load_tab = new JMenuItem("Load");
+        file_tab.add(load_tab);
+        load_tab.addActionListener(new LoadListener());
+        j_Menu_Bar.add(file_tab);
+        setJMenuBar(j_Menu_Bar);
+    }
+
     public void Menu(){
         j_Menu_Bar = new JMenuBar();
         file_tab = new JMenu("File");
@@ -75,8 +85,8 @@ public class MyGUI extends JFrame {
         load_tab = new JMenuItem("Load");
         file_tab.add(save_tab);
         file_tab.add(load_tab);
-        save_tab.addActionListener(new MENUListener());
-        load_tab.addActionListener(new MENUListener());
+        save_tab.addActionListener(new SaveListener());
+        load_tab.addActionListener(new LoadListener());
         j_Menu_Bar.add(file_tab);
         setJMenuBar(j_Menu_Bar);
     }
@@ -93,6 +103,7 @@ public class MyGUI extends JFrame {
             SetPanels();
         }
         Menu();
+
         // Displays the window.
         this.pack();
         this.setVisible(true);
@@ -161,8 +172,14 @@ public class MyGUI extends JFrame {
     enum InputMode {
         ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES,MENU
     }
-
-    private class MENUListener implements ActionListener {
+    private class SaveListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            mode = InputMode.MENU;
+            canvas.graphAlgo.save("SavedGraph.json");
+            Console.setText("saved as SavedGraph.json!!!");
+        }
+    }
+    private class LoadListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             mode = InputMode.MENU;
             JFileChooser j = new JFileChooser("data/");
@@ -174,8 +191,8 @@ public class MyGUI extends JFrame {
                 String file_path = j.getSelectedFile().getAbsolutePath();
                   Init(file_path);
 
-
             }
+
         }
     }
 
