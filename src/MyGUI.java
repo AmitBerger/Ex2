@@ -8,42 +8,38 @@ import java.util.List;
 
 public class MyGUI extends JFrame {
 
-    GraphCanvas canvas;
-
-    //    JFrame frame;
-    JMenuBar j_Menu_Bar;
-    JMenu file_tab;
-    JMenuItem save_tab, load_tab;
-
+    /** The input file name. */
+    String fileName;
 
     /**
-     * Label for the instructions
+     * Label for the instructions and results.
      */
     JLabel Console;
+
     /**
-     * The input mode - default: Add nodes button
+     * The input mode - default: Add nodes button.
      */
     InputMode mode = InputMode.ADD_NODES;
 
     /**
-     * Stores last mousedown event position
+     * Stores last mousedown event position.
      */
     NodeData nodeUnderMouse;
 
-    List<NodeData> tsp_cities;
-
-    String fileName;
-
-    Container pane;
-
+    /** Jars functions: */
+    MenuBar menu;
+    GraphCanvas canvas;
     ButtonsPanel buttons;
     MouseListenerPanel mouse;
     TSPPainterPanel traveler;
-    /**
-     * Constructors
-     */
+
+    /** Stores all the panels. */
+    Container pane;
+
+    /** Constructor: */
     public MyGUI() {
         this.setResizable(true);
+        menu = new MenuBar(this);
         SetFrame(false);
         this.setTitle("MY GUI");
         this.setResizable(false);
@@ -51,37 +47,17 @@ public class MyGUI extends JFrame {
 
     public void Init(String file) {
         canvas = new GraphCanvas(file);
+        // Creating all the panels/frames
         buttons = new ButtonsPanel(this);
-        traveler = new TSPPainterPanel(this);
         mouse = new MouseListenerPanel(this);
+        traveler = new TSPPainterPanel(this);
+
+        // Initialize the jar
         fileName = canvas.fileName;
         this.setResizable(true);
         SetFrame(true);
         this.setTitle("MY GUI");
         this.setResizable(false);
-    }
-
-    public void Load() {
-        j_Menu_Bar = new JMenuBar();
-        file_tab = new JMenu("File");
-        load_tab = new JMenuItem("Load");
-        file_tab.add(load_tab);
-        load_tab.addActionListener(new LoadListener());
-        j_Menu_Bar.add(file_tab);
-        setJMenuBar(j_Menu_Bar);
-    }
-
-    public void Menu() {
-        j_Menu_Bar = new JMenuBar();
-        file_tab = new JMenu("File");
-        save_tab = new JMenuItem("Save");
-        load_tab = new JMenuItem("Load");
-        file_tab.add(save_tab);
-        file_tab.add(load_tab);
-        save_tab.addActionListener(new SaveListener());
-        load_tab.addActionListener(new LoadListener());
-        j_Menu_Bar.add(file_tab);
-        setJMenuBar(j_Menu_Bar);
     }
 
     /**
@@ -97,8 +73,7 @@ public class MyGUI extends JFrame {
             // Filling a container(pane).
             SetPanels();
         }
-        Menu();
-
+        // If !flag only the menu will appear
         // Displays the window.
         this.pack();
         this.setVisible(true);
@@ -120,6 +95,13 @@ public class MyGUI extends JFrame {
     }
 
     /**
+     * Constants for recording the input mode
+     */
+    enum InputMode {
+        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES, MENU
+    }
+
+    /**
      * Main - Scheduler
      */
     public static void main(String[] args) {
@@ -131,43 +113,10 @@ public class MyGUI extends JFrame {
     }
 
     /**
-     * Constants for recording the input mode
-     */
-    enum InputMode {
-        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES, MENU
-    }
-
-    /**
-     * Repaint every thing to the default color
+     * Repaint everything to the default color
      */
     public void refresh() {
-//        new MyGUI(fileName);
-//        this.getContentPane().removeAll();
         canvas.refresh();
-    }
-
-    private class SaveListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.MENU;
-            canvas.graphAlgo.save("SavedGraph.json");
-            Console.setText("saved as SavedGraph.json!!!");
-        }
-    }
-
-    private class LoadListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.MENU;
-            JFileChooser j = new JFileChooser("data/");
-            j.setAcceptAllFileFilterUsed(false);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json files", "json");
-            j.addChoosableFileFilter(filter);
-            int r = j.showOpenDialog(null);
-            if (r == JFileChooser.APPROVE_OPTION) {
-                String file_path = j.getSelectedFile().getAbsolutePath();
-                Init(file_path);
-            }
-
-        }
     }
 
 }

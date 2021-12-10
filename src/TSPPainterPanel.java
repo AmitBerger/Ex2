@@ -50,6 +50,7 @@ public class TSPPainterPanel extends JPanel{
      */
     private class RFListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            GUI.mode = MyGUI.InputMode.REFRESH;
             GUI.refresh();
             GUI.buttons.addNodeButton.setEnabled(true);
             GUI.buttons.removeNodeButton.setEnabled(true);
@@ -59,7 +60,7 @@ public class TSPPainterPanel extends JPanel{
             shortestPathButton.setEnabled(true);
             GUI.buttons.isConnectedButton.setEnabled(true);
             GUI.buttons.centerButton.setEnabled(true);
-            GUI.Console.setText("Refreshed");
+            GUI.Console.setText("Refreshed!");
         }
     }
 
