@@ -11,10 +11,11 @@ import java.awt.geom.Line2D;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class GraphCanvas extends JPanel implements ActionListener {
+public class GraphCanvas extends JComponent implements ActionListener {
     /**
      * The Graph
      */
@@ -29,8 +30,9 @@ public class GraphCanvas extends JPanel implements ActionListener {
     public double NodeMaxX = Double.MIN_VALUE;
     public double NodeMaxY = Double.MIN_VALUE;
     final int BLACK = 0;
-    final int BLUE = 0;
-    final int ORANGE = 0;
+    final int GRAY = 1;
+    final int BLUE = 2;
+    final int ORANGE = 3;
     MyGUI gui;
 
     String fileName = "data/G3.json";
@@ -93,6 +95,9 @@ public class GraphCanvas extends JPanel implements ActionListener {
         Iterator<EdgeData> edgeIter = graph.edgeIter();
         while (edgeIter.hasNext()) {
             EdgeData edge = edgeIter.next();
+            if (edge.getTag() == GRAY) {
+                g.setColor(Color.lightGray);
+            }
             GeoLocation geo1 = this.graph.getNode(edge.getSrc()).getLocation();
             GeoLocation geo2 = this.graph.getNode(edge.getDest()).getLocation();
             double x1 = (int) ((geo1.x() - NodeMinX) * xScaled * 0.97 + 30);
@@ -110,11 +115,13 @@ public class GraphCanvas extends JPanel implements ActionListener {
             // Linearly map the point
             double x = (node.getLocation().x() - NodeMinX) * xScaled * 0.97 + 30;
             double y = (node.getLocation().y() - NodeMinY) * yScaled * 0.97 + 30;
-            if (node.getTag() == 0) {
+            if (node.getTag() == BLACK) {
                 g.setColor(Color.BLACK);
-            } else if (node.getTag() == 1) {
+            } else if (node.getTag() == GRAY) {
+                g.setColor(Color.lightGray);
+            } else if (node.getTag() == BLUE){
                 g.setColor(Color.BLUE);
-            } else {
+            }else {
                 g.setColor(Color.ORANGE);
             }
             g.drawOval((int) x, (int) y, 30, 30);
@@ -131,30 +138,11 @@ public class GraphCanvas extends JPanel implements ActionListener {
         double phi = Math.PI / 6;
         double x = x0 - barb * Math.cos(theta + phi);
         double y = y0 - barb * Math.sin(theta + phi);
-        g2.setPaint(Color.BLACK);
         g2.setStroke(new BasicStroke(2));
         g2.draw(new Line2D.Double(x0, y0, x, y));
         x = x0 - barb * Math.cos(theta - phi);
         y = y0 - barb * Math.sin(theta - phi);
         g2.draw(new Line2D.Double(x0, y0, x, y));
-    }
-
-    public void refresh() {
-        repaint();
-    }
-
-    public Dimension getPreferredSize() {
-        this.size = new Dimension(width, height);
-        return size;
-    }
-
-    private void UpdateSize() {
-        this.size = new Dimension(this.getWidth(), this.getHeight());
-        this.setSize(size);
-    }
-
-    public Dimension getSize() {
-        return size;
     }
 
     /**
@@ -163,24 +151,20 @@ public class GraphCanvas extends JPanel implements ActionListener {
      * @param path the list of edges in the traversal path
      * @return whether there is a traversal to paint or not
      */
-    public Boolean paintTraversal(LinkedList<EdgeData> path) {
-        boolean painting;
+    public Boolean paintTraversal(List<EdgeData> path) {
         if (path.isEmpty()) {
-            painting = false;
-            return painting;
-        } else {
-            painting = true;
+            return false;
         }
-        // set every thing to gray, and set the start point to orange
+        // set every thing to black, and set the start point to orange
         Iterator<EdgeData> edgeIter = graph.edgeIter();
         while (edgeIter.hasNext()) {
-            edgeIter.next().setTag(Color.black.getRGB());
+            edgeIter.next().setTag(GRAY);
         }
         Iterator<NodeData> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext()) {
-            nodeIter.next().setTag(Color.lightGray.getRGB());
+            nodeIter.next().setTag(GRAY);
         }
-        path.get(0).setTag(Color.ORANGE.getRGB());
+        path.get(0).setTag(ORANGE);
         repaint();
 
         for (EdgeData edge : path) {
@@ -196,11 +180,10 @@ public class GraphCanvas extends JPanel implements ActionListener {
                 Thread.sleep(800);
             } catch (InterruptedException ignore) {
             }
-            edge.setTag(BLACK);
-            graph.getNode(edge.getDest()).setTag(0);
+            graph.getNode(edge.getDest()).setTag(BLUE);
             repaint();
         }
-        return painting;
+        return true;
     }
 
     @Override
@@ -222,6 +205,26 @@ public class GraphCanvas extends JPanel implements ActionListener {
             }
         }
 
+    }
+
+    public void refresh() {
+        Iterator<EdgeData> edgeIter = graph.edgeIter();
+        while (edgeIter.hasNext()){
+            edgeIter.next().setTag(BLACK);
+        }
+        Iterator<NodeData> nodeIter = graph.nodeIter();
+        while (nodeIter.hasNext()){
+            nodeIter.next().setTag(BLUE);
+        }
+        repaint();
+    }
+
+    public Dimension getMinimumSize() {
+        return new Dimension(width,height);
+    }
+    public Dimension getPreferredSize() {
+        this.size = new Dimension(width, height);
+        return size;
     }
 
 }

@@ -1,18 +1,16 @@
-import api.EdgeData;
 import api.NodeData;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MyGUI extends JFrame {
 
     GraphCanvas canvas;
 
-//    JFrame frame;
+    //    JFrame frame;
     JMenuBar j_Menu_Bar;
     JMenu file_tab;
     JMenuItem save_tab, load_tab;
@@ -22,12 +20,6 @@ public class MyGUI extends JFrame {
      * Label for the instructions
      */
     JLabel Console;
-    /**
-     * Buttons for the user:
-     */
-
-    JButton refreshButton;
-    JButton shortestPathButton;
     /**
      * The input mode - default: Add nodes button
      */
@@ -46,6 +38,7 @@ public class MyGUI extends JFrame {
 
     ButtonsPanel buttons;
     MouseListenerPanel mouse;
+    TSPPainterPanel traveler;
     /**
      * Constructors
      */
@@ -59,6 +52,7 @@ public class MyGUI extends JFrame {
     public void Init(String file) {
         canvas = new GraphCanvas(file);
         buttons = new ButtonsPanel(this);
+        traveler = new TSPPainterPanel(this);
         mouse = new MouseListenerPanel(this);
         fileName = canvas.fileName;
         this.setResizable(true);
@@ -67,7 +61,7 @@ public class MyGUI extends JFrame {
         this.setResizable(false);
     }
 
-    public void Load(){
+    public void Load() {
         j_Menu_Bar = new JMenuBar();
         file_tab = new JMenu("File");
         load_tab = new JMenuItem("Load");
@@ -77,7 +71,7 @@ public class MyGUI extends JFrame {
         setJMenuBar(j_Menu_Bar);
     }
 
-    public void Menu(){
+    public void Menu() {
         j_Menu_Bar = new JMenuBar();
         file_tab = new JMenu("File");
         save_tab = new JMenuItem("Save");
@@ -89,6 +83,7 @@ public class MyGUI extends JFrame {
         j_Menu_Bar.add(file_tab);
         setJMenuBar(j_Menu_Bar);
     }
+
     /**
      * Creat the GUI window
      */
@@ -99,6 +94,7 @@ public class MyGUI extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Add components.
         if (flag) {
+            // Filling a container(pane).
             SetPanels();
         }
         Menu();
@@ -108,42 +104,19 @@ public class MyGUI extends JFrame {
         this.setVisible(true);
     }
 
-
     /**
      * Creat & displays the buttons & graph
      */
     private void SetPanels() {
-        // Filling a container(pane)
+
         pane = this.getContentPane();
         pane.setLayout(new FlowLayout());
-        addPanel1();
-        addPanel2();
-        addPanel3();
-    }
-
-    private void addPanel1() {
-        // Adding the graph
+        // Adding the graph panel
         pane.add(mouse);
-    }
-
-    private void addPanel2() {
-        // build graph buttons
+        // Adding functions buttons panel
         pane.add(buttons);
-    }
-
-    private void addPanel3() {
-        // traversal buttons
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayout(2,1));
-
-        refreshButton = new JButton("Refresh");
-        panel3.add(refreshButton);
-        refreshButton.addActionListener(new RFListener());
-
-        shortestPathButton = new JButton("Shortest Path");
-        panel3.add(shortestPathButton);
-        shortestPathButton.addActionListener(new SPListener());
-        pane.add(panel3);
+        // Adding the drawing panel for tsp answer.
+        pane.add(traveler);
     }
 
     /**
@@ -161,8 +134,18 @@ public class MyGUI extends JFrame {
      * Constants for recording the input mode
      */
     enum InputMode {
-        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES,MENU
+        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES, MENU
     }
+
+    /**
+     * Repaint every thing to the default color
+     */
+    public void refresh() {
+//        new MyGUI(fileName);
+//        this.getContentPane().removeAll();
+        canvas.refresh();
+    }
+
     private class SaveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             mode = InputMode.MENU;
@@ -170,6 +153,7 @@ public class MyGUI extends JFrame {
             Console.setText("saved as SavedGraph.json!!!");
         }
     }
+
     private class LoadListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             mode = InputMode.MENU;
@@ -180,79 +164,9 @@ public class MyGUI extends JFrame {
             int r = j.showOpenDialog(null);
             if (r == JFileChooser.APPROVE_OPTION) {
                 String file_path = j.getSelectedFile().getAbsolutePath();
-                  Init(file_path);
-
+                Init(file_path);
             }
 
-        }
-    }
-
-    /**
-     * Listener for SP button
-     */
-    private class SPListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            mode = InputMode.SP;
-            Console.setText("The shortest path is:");
-        }
-    }
-
-    /**
-     * Listener for Refresh Path button
-     */
-    private class RFListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            refresh();
-            buttons.addNodeButton.setEnabled(true);
-            buttons.removeNodeButton.setEnabled(true);
-            buttons.addEdgeButton.setEnabled(true);
-            buttons.removeEdgeButton.setEnabled(true);
-            refreshButton.setEnabled(true);
-            shortestPathButton.setEnabled(true);
-            buttons.isConnectedButton.setEnabled(true);
-            buttons.centerButton.setEnabled(true);
-            Console.setText("Refreshed");
-        }
-    }
-
-    /*Repaint every thing to the default color*/
-    public void refresh() {
-//        new MyGUI(fileName);
-//        this.getContentPane().removeAll();
-        canvas.repaint();
-    }
-
-    /** Worker class for doing traversals */
-    private class TraversalThread extends SwingWorker<Boolean, Object> {
-        /** The path that needs to paint */
-        private final LinkedList<EdgeData> path;
-
-        /** The Constructor of TraversalThread */
-        public TraversalThread(LinkedList<EdgeData> path){
-            this.path = path;
-        }
-
-        @Override
-        public Boolean doInBackground() {
-            buttons.addNodeButton.setEnabled(false);
-            buttons.removeNodeButton.setEnabled(false);
-            buttons.addEdgeButton.setEnabled(false);
-            buttons.removeEdgeButton.setEnabled(false);
-            refreshButton.setEnabled(false);
-            return canvas.paintTraversal(path);
-        }
-
-        @Override
-        protected void done() {
-            try {
-                if (path.isEmpty() && path != null) {  // test the result of doInBackground()
-                    Console.setText("There is no path. Please refresh.");
-                }
-                refreshButton.setEnabled(true);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 

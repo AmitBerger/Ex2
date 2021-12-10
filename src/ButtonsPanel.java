@@ -8,10 +8,7 @@ import java.awt.event.ActionListener;
 public class ButtonsPanel extends JPanel{
 
     MyGUI GUI;
-    /**
-     * Label for the instructions
-     */
-    private JLabel Console;
+
     /**
      * Buttons for the user:
      */
@@ -30,15 +27,6 @@ public class ButtonsPanel extends JPanel{
     private JTextField SP_DST;
     private JTextField TSP_CITIES;
 
-    /**
-     * The input mode - default: Add nodes button
-     */
-    private MyGUI.InputMode mode = MyGUI.InputMode.ADD_NODES;
-
-    /**
-     * Stores last mousedown event position
-     */
-    private NodeData nodeUnderMouse;
 
     public ButtonsPanel(MyGUI g){
         this.setBackground(Color.GRAY);
@@ -86,7 +74,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class AddNodeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.ADD_NODES;
+            GUI.mode = MyGUI.InputMode.ADD_NODES;
             GUI.Console.setText("Click on the jar screen to add a new node");
         }
     }
@@ -96,7 +84,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class RmvNodeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.RMV_NODES;
+            GUI.mode = MyGUI.InputMode.RMV_NODES;
             GUI.Console.setText("Click on a node to remove.");
         }
     }
@@ -106,7 +94,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class AddEdgeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.ADD_EDGES;
+            GUI.mode = MyGUI.InputMode.ADD_EDGES;
             GUI.Console.setText("Drag from one node to another to remove an edge.");
         }
     }
@@ -116,7 +104,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class RmvEdgeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.RMV_EDGES;
+            GUI.mode = MyGUI.InputMode.RMV_EDGES;
             GUI.Console.setText("Drag from one node to another to remove an edge.");
         }
     }
@@ -126,7 +114,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class IsConnectedListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.IS_CONNECTED;
+            GUI.mode = MyGUI.InputMode.IS_CONNECTED;
             String text = "" + GUI.canvas.graphAlgo.isConnected();
             GUI.Console.setText("IsConnected? == "+text);
         }
@@ -137,7 +125,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class CenterListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.CENTER;
+            GUI.mode = MyGUI.InputMode.CENTER;
             String text = "" + GUI.canvas.graphAlgo.center();
             GUI.Console.setText("The center is: "+text);
         }
@@ -148,7 +136,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class SP_SRCListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.SP_SRC;
+            GUI.mode = MyGUI.InputMode.SP_SRC;
             GUI.Console.setText("Enter the source node key");
         }
     }
@@ -158,7 +146,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class SP_DSTListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.SP_DST;
+            GUI.mode = MyGUI.InputMode.SP_DST;
             GUI.Console.setText("ShortestPath: ");
         }
     }
@@ -167,7 +155,7 @@ public class ButtonsPanel extends JPanel{
      */
     private class SPListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            mode = MyGUI.InputMode.SP;
+            GUI.mode = MyGUI.InputMode.SP;
             GUI.Console.setText("The shortest path is:");
         }
     }
