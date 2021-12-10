@@ -1,3 +1,5 @@
+package Implementation;
+
 import api.EdgeData;
 
 public class Edge implements EdgeData {
@@ -78,7 +80,7 @@ public class Edge implements EdgeData {
 
     @Override
     public String toString() {
-        return "Edge{" +
+        return "Implementation.Edge{" +
                 "src=" + src +
                 ", dst=" + dst +
                 ", wgt=" + wgt + '}';

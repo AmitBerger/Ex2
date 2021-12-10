@@ -1,8 +1,7 @@
-import api.EdgeData;
+package Implementation;
+
 import api.GeoLocation;
 import api.NodeData;
-
-import java.util.HashMap;
 
 public class Node implements NodeData, Comparable<Node>{
 
@@ -83,7 +82,7 @@ public class Node implements NodeData, Comparable<Node>{
 
     @Override
     public String toString() {
-        return "Node{"+ key+"}";
+        return "Implementation.Node{"+ key+"}";
     }
 
     @Override

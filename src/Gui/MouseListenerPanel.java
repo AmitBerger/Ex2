@@ -1,6 +1,9 @@
-import api.EdgeData;
+package Gui;
+
 import api.GeoLocation;
 import api.NodeData;
+import Implementation.Location;
+import Implementation.Node;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 public class MouseListenerPanel extends JPanel {
 

@@ -1,21 +1,21 @@
+package Gui;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
-import org.w3c.dom.css.RGBColor;
+import Implementation.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class GraphCanvas extends JComponent implements ActionListener {
+public class GraphCanvas extends JComponent {
     /**
      * The Graph
      */
@@ -33,7 +33,7 @@ public class GraphCanvas extends JComponent implements ActionListener {
     final int GRAY = 1;
     final int BLUE = 2;
     final int ORANGE = 3;
-    MyGUI gui;
+    MyGUI GUI;
 
     String fileName = "data/G3.json";
 
@@ -184,27 +184,6 @@ public class GraphCanvas extends JComponent implements ActionListener {
             repaint();
         }
         return true;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JMenuItem source = (JMenuItem) e.getSource();
-
-        if (source == gui.load_tab) {
-            JFileChooser j = new JFileChooser("data/");
-            j.setAcceptAllFileFilterUsed(false);
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json files", "json");
-            j.addChoosableFileFilter(filter);
-            int r = j.showOpenDialog(null);
-            if (r == JFileChooser.APPROVE_OPTION) {
-                String file_path = j.getSelectedFile().getAbsolutePath();
-
-                MyDWGAlgorithm GA = new MyDWGAlgorithm();
-                GA.load(file_path);
-
-            }
-        }
-
     }
 
     public void refresh() {

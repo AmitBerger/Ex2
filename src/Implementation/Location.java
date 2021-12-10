@@ -1,3 +1,5 @@
+package Implementation;
+
 import api.GeoLocation;
 
 public class Location implements GeoLocation {
@@ -36,7 +38,7 @@ public class Location implements GeoLocation {
 
     @Override
     public String toString() {
-        return "Location{" +
+        return "Implementation.Location{" +
                 "x=" + x +
                 ", y=" + y +
                 ", z=" + z +

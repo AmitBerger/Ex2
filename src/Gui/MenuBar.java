@@ -1,9 +1,13 @@
+package Gui;
+
+import Implementation.MyDWGAlgorithm;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuBar extends JFrame {
+public class MenuBar extends JFrame implements ActionListener {
 
     MyGUI GUI;
 
@@ -30,15 +34,15 @@ public class MenuBar extends JFrame {
         GUI.setJMenuBar(j_Menu_Bar);
     }
 
-//    public void Load() {
-//        j_Menu_Bar = new JMenuBar();
-//        file_tab = new JMenu("File");
-//        load_tab = new JMenuItem("Load");
-//        file_tab.add(load_tab);
-//        load_tab.addActionListener(new LoadListener());
-//        j_Menu_Bar.add(file_tab);
-//        setJMenuBar(j_Menu_Bar);
-//    }
+    public void Load() {
+        j_Menu_Bar = new JMenuBar();
+        file_tab = new JMenu("File");
+        load_tab = new JMenuItem("Load");
+        file_tab.add(load_tab);
+        load_tab.addActionListener(new LoadListener());
+        j_Menu_Bar.add(file_tab);
+        setJMenuBar(j_Menu_Bar);
+    }
 
 
     private class SaveListener implements ActionListener {
@@ -62,6 +66,27 @@ public class MenuBar extends JFrame {
                 GUI.Init(file_path);
             }
         }
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JMenuItem source = (JMenuItem) e.getSource();
+
+        if (source == load_tab) {
+            JFileChooser j = new JFileChooser("data/");
+            j.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Json files", "json");
+            j.addChoosableFileFilter(filter);
+            int r = j.showOpenDialog(null);
+            if (r == JFileChooser.APPROVE_OPTION) {
+                String file_path = j.getSelectedFile().getAbsolutePath();
+                MyDWGAlgorithm GA = new MyDWGAlgorithm();
+                GA.load(file_path);
+
+            }
+        }
+
     }
 
 }

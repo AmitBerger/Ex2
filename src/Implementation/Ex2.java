@@ -1,3 +1,5 @@
+package Implementation;
+
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
@@ -6,7 +8,7 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * This class is the main class for Ex2 - your implementation will be tested using this class.
+ * This class is the main class for Implementation.Ex2 - your implementation will be tested using this class.
  */
 public class Ex2 {
     /**
@@ -48,7 +50,7 @@ public class Ex2 {
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         // ****** Add your code here ******
-//                GUI.runGUI((MyDWG)alg.getGraph());
+//                GUI.runGUI((Implementation.MyDWG)alg.getGraph());
         // ********************************
     }
 }

@@ -1,4 +1,4 @@
-import api.NodeData;
+package Gui;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class ButtonsPanel extends JPanel{
     }
 
     /**
-     * Listener for Add Node button
+     * Listener for Add Implementation.Node button
      */
     private class AddNodeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -80,7 +80,7 @@ public class ButtonsPanel extends JPanel{
     }
 
     /**
-     * Listener for Remove Node button
+     * Listener for Remove Implementation.Node button
      */
     private class RmvNodeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -90,7 +90,7 @@ public class ButtonsPanel extends JPanel{
     }
 
     /**
-     * Listener for Add Edge button
+     * Listener for Add Implementation.Edge button
      */
     private class AddEdgeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -100,7 +100,7 @@ public class ButtonsPanel extends JPanel{
     }
 
     /**
-     * Listener for Remove Edge button
+     * Listener for Remove Implementation.Edge button
      */
     private class RmvEdgeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {

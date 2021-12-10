@@ -1,3 +1,5 @@
+package Implementation;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
@@ -272,6 +274,7 @@ public class MyDWG implements DirectedWeightedGraph {
     public HashMap<Integer, HashMap<Integer, EdgeData>> getEdgeList() {
         return this.edgeList;
     }
+    public HashMap<Integer, NodeData> getNodeList() { return this.nodeList; }
 
     public HashMap<Integer, EdgeData> getSpecificNodeEdges(int nodeKey) {
         return this.edgeList.get(nodeKey);
@@ -279,7 +282,7 @@ public class MyDWG implements DirectedWeightedGraph {
 
     @Override
     public String toString() {
-        return "MyDWG{" +
+        return "Implementation.MyDWG{" +
                 "nodeList=" + nodeList +
                 ", edgeList=" + edgeList +
                 ", nodeSize=" + nodeSize +

@@ -1,3 +1,5 @@
+package Gui;
+
 import api.EdgeData;
 
 import javax.swing.*;

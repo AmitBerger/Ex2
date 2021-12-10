@@ -1,3 +1,4 @@
+import Implementation.*;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
@@ -85,8 +86,8 @@ class MyDWGAlgorithmTest {
             assertEquals(n1.getLocation().y(), nodes[i].getLocation().y());
             assertEquals(n1.getLocation().z(), nodes[i].getLocation().z());
 
-            assertTrue(dwg.edgeList.containsKey(e.getSrc()));
-            assertTrue(dwg.edgeList.get(e.getSrc()).containsKey(e.getDest()));
+            assertTrue(dwg.getEdgeList().containsKey(e.getSrc()));
+            assertTrue(dwg.getEdgeList().get(e.getSrc()).containsKey(e.getDest()));
             i++;
         }
     }

@@ -1,5 +1,8 @@
 
-import org.junit.jupiter.api.BeforeEach;
+import Implementation.Edge;
+import Implementation.Location;
+import Implementation.MyDWG;
+import Implementation.Node;
 import org.junit.jupiter.api.Test;
 import api.*;
 
@@ -76,7 +79,7 @@ class MyDWGTest {
         g.addNode(n2);
         g.connect(n1.getKey(),n2.getKey(),2);
         EdgeData e1 = new Edge(n1.getKey(),n2.getKey(),2);
-        assertEquals(g.edgeList.get(e1.getSrc()).get(e1.getDest()).toString(),e1.toString());
+        assertEquals(g.getEdgeList().get(e1.getSrc()).get(e1.getDest()).toString(),e1.toString());
     }
 
     @Test
@@ -89,21 +92,21 @@ class MyDWGTest {
         g.removeNode(n1.getKey());
         g.removeNode(n2.getKey());
         assertNull(g.getNode(n1.getKey()));
-        assertEquals(0, g.edgeList.size());
+        assertEquals(0, g.getEdgeList().size());
     }
 
 
     @Test
     void nodeSize() {
 
-        assertEquals(0,g.nodeList.size());
+        assertEquals(0,g.getNodeList().size());
         g.addNode(a);
         g.addNode(b);
         g.addNode(c);
-        assertEquals(3,g.nodeList.size());
+        assertEquals(3,g.getNodeList().size());
         g.addNode(d);
         g.addNode(e);
-        assertEquals(5,g.nodeList.size());
+        assertEquals(5,g.getNodeList().size());
     }
 
     @Test

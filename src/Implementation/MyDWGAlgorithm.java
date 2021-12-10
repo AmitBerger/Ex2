@@ -1,3 +1,4 @@
+package Implementation;
 
 import api.*;
 import com.google.gson.JsonArray;
@@ -42,7 +43,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     Site which explains about BFS and its algorithm: https://en.wikipedia.org/wiki/Breadth-first_search .
     Which we learned in Algorithm 1 class.
     It runs as follows :
-    Step 1: Take a random node from the graph and check if this Node is connected to all the other nodes.
+    Step 1: Take a random node from the graph and check if this Implementation.Node is connected to all the other nodes.
     Step 2: Reverse all the edges of the graph.
     Step 3: check if the random node we chose is still connected to all the other nodes.
     In class, we proved that when it happens the graph is connected.
