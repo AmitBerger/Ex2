@@ -9,12 +9,12 @@ import java.awt.event.ActionListener;
 
 public class MenuBar extends JFrame implements ActionListener {
 
-    MyGUI GUI;
+    private MyGUI GUI;
 
     //    JFrame frame;
-    JMenuBar j_Menu_Bar;
-    JMenu file_tab;
-    JMenuItem save_tab, load_tab;
+    private JMenuBar j_Menu_Bar;
+    private JMenu file_tab;
+    private JMenuItem save_tab, load_tab;
 
     public MenuBar(MyGUI g){
         GUI =g;

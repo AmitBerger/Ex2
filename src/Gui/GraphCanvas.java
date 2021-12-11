@@ -151,7 +151,7 @@ public class GraphCanvas extends JComponent {
      * @param path the list of edges in the traversal path
      * @return whether there is a traversal to paint or not
      */
-    public Boolean paintTraversal(List<EdgeData> path) {
+    public Boolean paintTraversal(List<NodeData> path) {
         if (path.isEmpty()) {
             return false;
         }
@@ -167,20 +167,19 @@ public class GraphCanvas extends JComponent {
         path.get(0).setTag(ORANGE);
         repaint();
 
-        for (EdgeData edge : path) {
+        for (NodeData node : path) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ignore) {
             }
             // Color the current edge
-            edge.setTag(BLUE);
-            graph.getNode(edge.getDest()).setTag(ORANGE);
+            node.setTag(ORANGE);
             repaint();
             try {
                 Thread.sleep(800);
             } catch (InterruptedException ignore) {
             }
-            graph.getNode(edge.getDest()).setTag(BLUE);
+            node.setTag(GRAY);
             repaint();
         }
         return true;

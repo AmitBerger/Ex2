@@ -16,6 +16,7 @@ public class MouseListenerPanel extends JPanel {
 
     MyGUI GUI;
 
+
     public MouseListenerPanel(MyGUI g){
         GUI = g;
         this.setLayout(new BorderLayout());
@@ -23,7 +24,7 @@ public class MouseListenerPanel extends JPanel {
         GUI.canvas.addMouseListener(listener);
         GUI.canvas.addMouseMotionListener(listener);
         this.add(GUI.canvas);
-        GUI.Console = new JLabel(("Click to add new nodes"));
+        GUI.Console = new JLabel((""));
         this.add(GUI.Console, BorderLayout.NORTH);
     }
 
@@ -52,7 +53,8 @@ public class MouseListenerPanel extends JPanel {
                 case ADD_NODES:
                     if (nearbyNode == null) {
                         int num = GUI.canvas.graph.nodeSize();
-                        GUI.canvas.graph.addNode(new Node(num, new Location(e.getX(), e.getY(), 0.0)));
+                        Node node = new Node(num, new Location(e.getX(), e.getY(), 0.0));
+                        GUI.canvas.graph.addNode(node);
                         GUI.refresh();
                         worked = true;
                     }

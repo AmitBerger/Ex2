@@ -41,7 +41,7 @@ public class ButtonsPanel extends JPanel{
 
         this.setBackground(Color.GRAY);
         // Sets the table for the buttons
-        this.setLayout(new GridLayout(4, 1));
+        this.setLayout(new GridLayout(3, 2));
 
         addNodeButton = new JButton("Add Nodes");
         this.add(addNodeButton);
@@ -128,35 +128,6 @@ public class ButtonsPanel extends JPanel{
             GUI.mode = MyGUI.InputMode.CENTER;
             String text = "" + GUI.canvas.graphAlgo.center();
             GUI.Console.setText("The center is: "+text);
-        }
-    }
-
-    /**
-     * Listener for shortest path src text field
-     */
-    private class SP_SRCListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            GUI.mode = MyGUI.InputMode.SP_SRC;
-            GUI.Console.setText("Enter the source node key");
-        }
-    }
-
-    /**
-     * Listener for shortest path dst text field
-     */
-    private class SP_DSTListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            GUI.mode = MyGUI.InputMode.SP_DST;
-            GUI.Console.setText("ShortestPath: ");
-        }
-    }
-    /**
-     * Listener for SP button
-     */
-    private class SPListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            GUI.mode = MyGUI.InputMode.SP;
-            GUI.Console.setText("The shortest path is:");
         }
     }
 
