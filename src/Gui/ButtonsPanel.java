@@ -1,6 +1,7 @@
 package Gui;
 
 import api.NodeData;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class ButtonsPanel extends JPanel{
     JTextField src;
     JTextField dst;
     JTextField cities;
-    List<NodeData> city = new ArrayList<>();
+
 
 
 
@@ -36,7 +37,7 @@ public class ButtonsPanel extends JPanel{
     public ButtonsPanel(MyGUI g){
         this.setBackground(Color.GRAY);
         // Sets the table for the buttons
-        this.setLayout(new GridLayout(3, 1));
+        this.setLayout(new GridLayout(4, 1));
         GUI = g;
         AddButtons();
     }
@@ -46,7 +47,7 @@ public class ButtonsPanel extends JPanel{
 
         this.setBackground(Color.GRAY);
         // Sets the table for the buttons
-        this.setLayout(new GridLayout(3, 1));
+        this.setLayout(new GridLayout(4, 1));
 
         isConnectedButton = new JButton("IsConnected");
         this.add(isConnectedButton);
@@ -96,7 +97,7 @@ public class ButtonsPanel extends JPanel{
             GUI.Console.setText("The center is: "+text);
         }
     }
-    private class SPListener implements ActionListener {
+    private class SPListener extends JFrame implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String text = "";
             if (src.getText().length() == 0 || dst.getText().length() == 0) {
@@ -105,6 +106,7 @@ public class ButtonsPanel extends JPanel{
                 int source = Integer.parseInt(src.getText());
                 int destination = Integer.parseInt(dst.getText());
                 text += GUI.canvas.graphAlgo.shortestPath(source,destination).toString();
+                text+=" and the dist is "+GUI.canvas.graphAlgo.shortestPathDist(source,destination);
             }
             GUI.Console.setText("Shortest path is == "+text);
         }
@@ -113,13 +115,14 @@ public class ButtonsPanel extends JPanel{
     private class TSPListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String text = "";
+            List<NodeData> city = new LinkedList<>();
             if (cities.getText().length() == 0) {
                 text += "Null";
             } else {
                 for (String s : cities.getText().split(",")) {
                     city.add(GUI.canvas.graph.getNode(Integer.parseInt(s)));
                 }
-                text += GUI.canvas.graphAlgo.tsp(city).toString();
+                text += (GUI.canvas.graphAlgo.tsp(city).toString());
             }
 
             GUI.Console.setText("tsp: "+text);
