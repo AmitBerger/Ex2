@@ -82,7 +82,7 @@ public class Node implements NodeData, Comparable<Node>{
 
     @Override
     public String toString() {
-        return "Implementation.Node{"+ key+"}";
+        return "Node{"+ key+"}";
     }
 
     @Override

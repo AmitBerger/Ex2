@@ -23,7 +23,6 @@ public class GraphCanvas extends JComponent {
     public DirectedWeightedGraph graph;
     final int width = 900;
     final int height = 750;
-    public final Dimension PreferredButtonSize = new Dimension(50, 25);
     private Dimension size = new Dimension(width, height);
     public double NodeMinX = Double.MAX_VALUE;
     public double NodeMinY = Double.MAX_VALUE;
@@ -33,22 +32,13 @@ public class GraphCanvas extends JComponent {
     final int GRAY = 1;
     final int BLUE = 2;
     final int ORANGE = 3;
-    MyGUI GUI;
 
-    String fileName = "data/G3.json";
+    String fileName;
 
 
     /**
      * Constructor
      */
-    public GraphCanvas() {
-        graphAlgo = new MyDWGAlgorithm();
-        graphAlgo.load(fileName);
-        graph = graphAlgo.getGraph();
-        getMinMaxValues();
-
-    }
-
     public GraphCanvas(String file) {
         graphAlgo = new MyDWGAlgorithm();
         graphAlgo.load(file);
@@ -119,9 +109,9 @@ public class GraphCanvas extends JComponent {
                 g.setColor(Color.BLACK);
             } else if (node.getTag() == GRAY) {
                 g.setColor(Color.lightGray);
-            } else if (node.getTag() == BLUE){
+            } else if (node.getTag() == BLUE) {
                 g.setColor(Color.BLUE);
-            }else {
+            } else {
                 g.setColor(Color.ORANGE);
             }
             g.drawOval((int) x, (int) y, 30, 30);
@@ -145,62 +135,24 @@ public class GraphCanvas extends JComponent {
         g2.draw(new Line2D.Double(x0, y0, x, y));
     }
 
-    /**
-     * Paint the traversal path to red
-     *
-     * @param path the list of edges in the traversal path
-     * @return whether there is a traversal to paint or not
-     */
-    public Boolean paintTraversal(List<EdgeData> path) {
-        if (path.isEmpty()) {
-            return false;
-        }
-        // set every thing to black, and set the start point to orange
-        Iterator<EdgeData> edgeIter = graph.edgeIter();
-        while (edgeIter.hasNext()) {
-            edgeIter.next().setTag(GRAY);
-        }
-        Iterator<NodeData> nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext()) {
-            nodeIter.next().setTag(GRAY);
-        }
-        path.get(0).setTag(ORANGE);
-        repaint();
-
-        for (EdgeData edge : path) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignore) {
-            }
-            // Color the current edge
-            edge.setTag(BLUE);
-            graph.getNode(edge.getDest()).setTag(ORANGE);
-            repaint();
-            try {
-                Thread.sleep(800);
-            } catch (InterruptedException ignore) {
-            }
-            graph.getNode(edge.getDest()).setTag(BLUE);
-            repaint();
-        }
-        return true;
-    }
 
     public void refresh() {
         Iterator<EdgeData> edgeIter = graph.edgeIter();
-        while (edgeIter.hasNext()){
+        while (edgeIter.hasNext()) {
             edgeIter.next().setTag(BLACK);
         }
         Iterator<NodeData> nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext()){
+        while (nodeIter.hasNext()) {
             nodeIter.next().setTag(BLUE);
         }
         repaint();
     }
 
     public Dimension getMinimumSize() {
-        return new Dimension(width,height);
+
+        return new Dimension(width, height);
     }
+
     public Dimension getPreferredSize() {
         this.size = new Dimension(width, height);
         return size;

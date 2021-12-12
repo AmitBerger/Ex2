@@ -1,13 +1,13 @@
 package Gui;
 
-import api.NodeData;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class MyGUI extends JFrame {
 
-    /** The input file name. */
+    /**
+     * The input file name.
+     */
     String fileName;
 
     /**
@@ -23,19 +23,24 @@ public class MyGUI extends JFrame {
     /**
      * Stores last mousedown event position.
      */
-    NodeData nodeUnderMouse;
 
-    /** Jars functions: */
+    /**
+     * Jars functions:
+     */
     MenuBar menu;
     GraphCanvas canvas;
     ButtonsPanel buttons;
-    MouseListenerPanel mouse;
-    TSPPainterPanel traveler;
+    ConsoleControl mouse;
 
-    /** Stores all the panels. */
+
+    /**
+     * Stores all the panels.
+     */
     Container pane;
 
-    /** Constructor: */
+    /**
+     * Constructor:
+     */
     public MyGUI() {
         this.setResizable(true);
         menu = new MenuBar(this);
@@ -48,9 +53,7 @@ public class MyGUI extends JFrame {
         canvas = new GraphCanvas(file);
         // Creating all the panels/frames
         buttons = new ButtonsPanel(this);
-        mouse = new MouseListenerPanel(this);
-        traveler = new TSPPainterPanel(this);
-
+        mouse = new ConsoleControl(this);
         // Initialize the jar
         fileName = canvas.fileName;
         this.setResizable(true);
@@ -63,16 +66,16 @@ public class MyGUI extends JFrame {
      * Creat the GUI window
      */
     private void SetFrame(boolean flag) {
-        // Adding a nice window decorations.           works?
+        // Adding a nice window decorations.
         JFrame.setDefaultLookAndFeelDecorated(true);
         // Create and set the window.
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // Add components.
+        // If !flag only the menu will appear
         if (flag) {
             // Filling a container(pane).
             SetPanels();
         }
-        // If !flag only the menu will appear
+
         // Displays the window.
         this.pack();
         this.setVisible(true);
@@ -89,26 +92,35 @@ public class MyGUI extends JFrame {
         pane.add(mouse);
         // Adding functions buttons panel
         pane.add(buttons);
-        // Adding the drawing panel for tsp answer.
-        pane.add(traveler);
+
     }
 
     /**
      * Constants for recording the input mode
      */
     enum InputMode {
-        ADD_NODES, RMV_NODES, ADD_EDGES, RMV_EDGES, REFRESH, SP, IS_CONNECTED, CENTER, SP_SRC, SP_DST, TSP_CITIES, MENU
+        ADD_NODES, IS_CONNECTED, CENTER, MENU
+    }
+
+    private static class ConsoleControl extends JPanel {
+
+        MyGUI GUI;
+
+        public ConsoleControl(MyGUI g) {
+            GUI = g;
+            this.setLayout(new BorderLayout());
+            this.add(GUI.canvas);
+            GUI.Console = new JLabel((""));
+            this.add(GUI.Console, BorderLayout.NORTH);
+        }
+
     }
 
     /**
      * Main - Scheduler
      */
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new MyGUI();
-            }
-        });
+        new MyGUI();
     }
 
     /**
