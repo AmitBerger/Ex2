@@ -73,10 +73,21 @@ Which has its own graph object.
   "Nodes": [{"pos": "35.19589389346247,32.10152879327731,0.0", "id": 0}, {"pos": "35.20319591121872,32.10318254621849,0.0", "id": 1}, {"pos": "35.20752617756255,32.1025646605042,0.0", "id": 2}, {"pos": "35.21007339305892,32.10107446554622,0.0", "id": 3}, {"pos": "35.21310882485876,32.104636394957986,0.0", "id": 4}]
 }
 
+**api uml:**
+
+![api_uml](https://user-images.githubusercontent.com/93476230/145725578-b1b78cee-4eeb-4fa9-98b2-e30f34a2ebba.png)
+
+**GUI uml:**
+
+![GUI_uml](https://user-images.githubusercontent.com/93476230/145725588-65d97540-85ac-4016-b3b6-7bd529885b8f.png)
+
+
 **Results:**
+
 ![Ex2_res](https://user-images.githubusercontent.com/93476230/145724684-a8b8d5a8-1a85-4fe8-8f75-26e00522d16e.png)
 
 **GUI Example for G1.json**
+
 ![Ex2_G1_load](https://user-images.githubusercontent.com/93476230/145724724-8c66ca2d-34c2-4c56-aced-2f045b394c83.png)
 
 
@@ -85,6 +96,7 @@ Which has its own graph object.
 In the commend line in this format: java -jar Ex2.jar G1.json 
 
 *Example:*
+
 ![How to run my code example](https://user-images.githubusercontent.com/93476230/145724659-4aabc35d-4eec-4d08-a1ff-82c9a06752e3.png)
 
 
