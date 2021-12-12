@@ -68,6 +68,7 @@ public class MyGUI extends JFrame {
         // Initialize the jar
         fileName = canvas.fileName;
         this.setResizable(true);
+
         SetFrame(true);
         this.setTitle("MY GUI");
         this.setResizable(false);
@@ -96,8 +97,10 @@ public class MyGUI extends JFrame {
      * Creat & displays the buttons & graph
      */
     private void SetPanels() {
+
         pane = this.getContentPane();
         pane.setLayout(new FlowLayout());
+        pane.setBackground(Color.lightGray);
         // Adding the graph panel
         pane.add(control);
         // Adding functions buttons panel
@@ -119,6 +122,7 @@ public class MyGUI extends JFrame {
         public ConsoleControl(MyGUI g) {
             GUI = g;
             this.setLayout(new BorderLayout());
+            this.setBackground(Color.lightGray);
             this.add(GUI.canvas);
             GUI.Console = new JLabel((""));
             this.add(GUI.Console, BorderLayout.NORTH);

@@ -4,6 +4,7 @@ import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Objects;
 
 /**
  * This class is the main class for Implementation.Ex2 - your implementation will be tested using this class.
@@ -48,11 +49,21 @@ public class Ex2 {
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         // ****** Add your code here ******
-        MyGUI GUI = new MyGUI(json_file);
+        if (Objects.equals(json_file, "")){
+            new MyGUI();
+        }
+        else{
+            new MyGUI(json_file);
+        }
         // ********************************
     }
 
     public static void main(String[] args) {
-        runGUI("data/G1.json");
+        if (args.length < 1){
+            runGUI("");
+        }
+        else{
+            runGUI(args[0]);
+        }
     }
 }

@@ -101,26 +101,26 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     }
 
     private MyDWG reverseGraph() {
-        MyDWG newGrph = new MyDWG();
+        MyDWG newGraph = new MyDWG();
         Iterator<NodeData> nodeIter = this.graph.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData currentNode = nodeIter.next();
-            newGrph.nodeList.put(currentNode.getKey(), currentNode);
+            newGraph.nodeList.put(currentNode.getKey(), currentNode);
         }
         Iterator<EdgeData> edgeIter = this.graph.edgeIter();
         while (edgeIter.hasNext()) {
             EdgeData currentEdge = edgeIter.next();
             Edge reversedEdge = new Edge(currentEdge.getDest(), currentEdge.getSrc(), currentEdge.getWeight());
 
-            if (newGrph.edgeList.containsKey(currentEdge.getDest())) {
-                newGrph.edgeList.get(currentEdge.getDest()).put(currentEdge.getSrc(), reversedEdge);
+            if (newGraph.edgeList.containsKey(currentEdge.getDest())) {
+                newGraph.edgeList.get(currentEdge.getDest()).put(currentEdge.getSrc(), reversedEdge);
             } else {
                 HashMap<Integer, EdgeData> reversed = new HashMap<>();
                 reversed.put(currentEdge.getSrc(), reversedEdge);
-                newGrph.edgeList.put(currentEdge.getDest(), reversed);
+                newGraph.edgeList.put(currentEdge.getDest(), reversed);
             }
         }
-        return newGrph;
+        return newGraph;
     }
 
     /*  The Idea for this function is based on the Dijkstra's algorithm.
@@ -245,6 +245,16 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         return nodesList;
     }
 
+    /*
+        Site which explains about Dijkstra's algorithm: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm .
+        Similar to the shortestPathDist idea.
+        Mission -> Set the weight of all the nodes in the graph to the shortest path distance from src to them.
+        Implementation:
+        Step 1: Set all weight to infinity and the src node weight to 0, And add them all to a queue.
+        Step 2: pull them one by one and update all its neighbors according to its weight.
+        At the end, we are left with a graph that each node weight is the shortest path distance
+        (according to the given src).
+     */
     private void dijkstra(int src) {
         PriorityQueue<NodeData> NodeQ = new PriorityQueue<>();
         Iterator<NodeData> iter = this.graph.nodeIter();
@@ -276,7 +286,15 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
 
     }
-    
+
+    /*
+        Mission -> Find the NodeData which minimizes the max distance to all the other nodes.
+        Implementation:
+        Step 1: Check if the graph is connected. If not return null.
+        Step 2: ForEach node in the graph call dijkstra, And find the max weight value.
+        Step 3: If this value is lower than the last canter update, update the center to this value.
+        Last, return the center.
+     */
     @Override
     public NodeData center() {
 
