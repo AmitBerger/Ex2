@@ -311,10 +311,14 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     //    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
     /*
         The Idea for this function is a Greedy algorithm.
-        Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest.
-        Implementation -> same as shortestPathDist. Only now for each node, we saved a list of nodes from src to it,
-                          which updates as well.
-        Last, return the dest list.
+        Mission ->  Given a city nodes the function Returns a list of nodes represents the shortest path throw all.
+        Implementation -> Same idea as before:
+        Step 1: Chose the first node. Add is to the ans array.
+        Step 2: Find the closest node in the given city to this node(lets call it CN).
+        Step 3: Get the path between them, and add it to the ans array.
+        Step 4: Remove the current node from cities and add CN
+        Step 5: Loop till there are no more nodes in cities.
+        Last, return the ans list.
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
