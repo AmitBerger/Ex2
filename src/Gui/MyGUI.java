@@ -30,7 +30,7 @@ public class MyGUI extends JFrame {
     MenuBar menu;
     GraphCanvas canvas;
     ButtonsPanel buttons;
-    ConsoleControl mouse;
+    ConsoleControl control;
 
 
     /**
@@ -48,12 +48,27 @@ public class MyGUI extends JFrame {
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
+    public MyGUI(String file) {
+        this.setResizable(true);
+        menu = new MenuBar(this);
+        canvas = new GraphCanvas(file);
+        // Creating all the panels/frames
+        buttons = new ButtonsPanel(this);
+        control = new ConsoleControl(this);
+        // Initialize the jar
+        fileName = canvas.fileName;
+
+        SetFrame(true);
+
+        this.setTitle("MY GUI");
+        this.setResizable(false);
+    }
 
     public void Init(String file) {
         canvas = new GraphCanvas(file);
         // Creating all the panels/frames
         buttons = new ButtonsPanel(this);
-        mouse = new ConsoleControl(this);
+        control = new ConsoleControl(this);
         // Initialize the jar
         fileName = canvas.fileName;
         this.setResizable(true);
@@ -89,7 +104,7 @@ public class MyGUI extends JFrame {
         pane = this.getContentPane();
         pane.setLayout(new FlowLayout());
         // Adding the graph panel
-        pane.add(mouse);
+        pane.add(control);
         // Adding functions buttons panel
         pane.add(buttons);
 

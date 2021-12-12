@@ -309,7 +309,54 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
 
 
     //    https://www.sanfoundry.com/java-program-implement-traveling-salesman-problem-using-nearest-neighbour-algorithm/
+    /*
+        The Idea for this function is a Greedy algorithm.
+        Mission -> Return the list of nodes which represent the shortest path from a given src node to the given dest.
+        Implementation -> same as shortestPathDist. Only now for each node, we saved a list of nodes from src to it,
+                          which updates as well.
+        Last, return the dest list.
+     */
+    @Override
+    public List<NodeData> tsp(List<NodeData> cities) {
+        if (cities.size() == 1) {
+            return cities;
+        }
+        List<NodeData> ans = new ArrayList<>();
+        List<NodeData> shortestPath;
 
+        NodeData currentNode = cities.get(0);
+        ans.add(currentNode);
+        cities.remove(0);
+
+        while (!cities.isEmpty()) {
+            int src = Integer.MIN_VALUE;
+            int dst = Integer.MIN_VALUE;
+            double shortestDist = Integer.MAX_VALUE;
+
+            int pulledNodeKey = currentNode.getKey();
+            int i = 0;
+            while (i < cities.size()) {
+                int currentCityNode = cities.get(i).getKey();
+                if (shortestPathDist(pulledNodeKey, currentCityNode) < shortestDist) {
+                    src = i;
+                    dst = currentCityNode;
+                    shortestDist = shortestPathDist(currentNode.getKey(), currentCityNode);
+                }
+                i++;
+            }
+            // Now we know who are the current src and dst that has the shortest path between them
+            shortestPath = shortestPath(pulledNodeKey, dst);
+            shortestPath.remove(0);
+            // Filling the ans with the list of nodes we got from the shortestPath function.
+            ans.addAll(shortestPath);
+            shortestPath.clear();
+            // Next node is:
+            currentNode = cities.get(src);
+            // Remove node from cities, so we won't go over the same node more than once
+            cities.remove(currentNode);
+        }
+        return ans;
+    }
 
 
     private void setAllTags(DirectedWeightedGraph g, int value) {
@@ -359,54 +406,6 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
         init(newGraph);
         return true;
-    }
-
-    public static void main(String[] args) {
-        MyDWGAlgorithm g = new MyDWGAlgorithm();
-        g.load("data/G1.json");
-        List<NodeData> cities = new LinkedList<>();
-        cities.add(g.graph.getNode(0));
-        cities.add(g.graph.getNode(16));
-        cities.add(g.graph.getNode(1));
-        cities.add(g.graph.getNode(2));
-        System.out.println(g.tsp(cities));
-
-//        g.load("data/G1.json");
-//        System.out.println(g.isConnected());
-//        System.out.println(g.shortestPathDist(2, 3));
-//        System.out.println(g.shortestPath(2, 3));
-//        long start = new Date().getTime();
-//        List<NodeData> cities2 = new LinkedList<>();
-//        Iterator<NodeData> node = g.graph.nodeIter();
-//        while (node.hasNext()){
-//            NodeData n = node.next();
-//            cities2.add(n);
-//        }
-//        System.out.println(g.tsp(cities2));
-//        System.out.println(total);
-//        long end = new Date().getTime();
-//        double dt = (end - start) / 1000.0;
-//        System.out.println(dt);
-
-//        List<NodeData> cities = new LinkedList<>();
-//        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
-//        while (nodeIter.hasNext()) {
-//            NodeData node = nodeIter.next();
-//            Iterator<EdgeData> edge = g.graph.edgeIter(node.getKey());
-//            while (edge.hasNext()){
-//                System.out.println(edge.next());
-//            }
-//        }
-//        System.out.println(g.tsp(cities));
-//        Iterator<EdgeData> edgeIter = g.graph.edgeIter();
-//        while (edgeIter.hasNext()){
-//            System.out.println(edgeIter.next());
-//        }
-//        Iterator<NodeData> nodeIter = g.getGraph().nodeIter();
-//        while (nodeIter.hasNext()){
-//            System.out.println(nodeIter.next());
-//        }
-//        g.save("firstTry.json");
     }
 }
 

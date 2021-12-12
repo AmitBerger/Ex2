@@ -1,5 +1,6 @@
 package Implementation;
 
+import Gui.MyGUI;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
@@ -50,7 +51,11 @@ public class Ex2 {
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         // ****** Add your code here ******
-//                GUI.runGUI((Implementation.MyDWG)alg.getGraph());
+        MyGUI GUI = new MyGUI(json_file);
         // ********************************
+    }
+
+    public static void main(String[] args) {
+        runGUI("data/G1.json");
     }
 }

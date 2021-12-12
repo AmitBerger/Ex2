@@ -59,7 +59,10 @@ public class MyDWG implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return this.edgeList.get(src).get(dest);
+        if (this.edgeList.containsKey(src) && this.edgeList.get(src).containsKey(dest)){
+            return this.edgeList.get(src).get(dest);
+        }
+        return null;
     }
 
     @Override
