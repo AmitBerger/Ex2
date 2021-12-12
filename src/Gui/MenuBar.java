@@ -1,13 +1,11 @@
 package Gui;
 
-import Implementation.MyDWGAlgorithm;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MenuBar extends JFrame  {
+public class MenuBar extends JFrame {
 
     MyGUI GUI;
     JMenuBar MenuBar;

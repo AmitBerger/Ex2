@@ -17,7 +17,6 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
     final int Visited = 1;
     final int NotYetVisited = 0;
-    public static double total = 0;
 
     public MyDWGAlgorithm() {
         this.graph = new MyDWG();
@@ -277,7 +276,7 @@ public class MyDWGAlgorithm implements DirectedWeightedGraphAlgorithms {
         }
 
     }
-
+    
     @Override
     public NodeData center() {
 

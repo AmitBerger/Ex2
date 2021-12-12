@@ -1,8 +1,5 @@
 package Gui;
-
 import api.NodeData;
-import org.junit.platform.commons.util.ToStringBuilder;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -10,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class ButtonsPanel extends JPanel{
+public class ButtonsPanel extends JPanel {
 
     MyGUI GUI;
 
@@ -26,22 +23,13 @@ public class ButtonsPanel extends JPanel{
     JTextField dst;
     JTextField cities;
 
-
-
-
-
-
-
-
-
-    public ButtonsPanel(MyGUI g){
+    public ButtonsPanel(MyGUI g) {
         this.setBackground(Color.GRAY);
         // Sets the table for the buttons
         this.setLayout(new GridLayout(4, 1));
         GUI = g;
         AddButtons();
     }
-
 
     private void AddButtons() {
 
@@ -83,7 +71,7 @@ public class ButtonsPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
             GUI.mode = MyGUI.InputMode.IS_CONNECTED;
             String text = "" + GUI.canvas.graphAlgo.isConnected();
-            GUI.Console.setText("IsConnected? == "+text);
+            GUI.Console.setText("IsConnected? == " + text);
         }
     }
 
@@ -94,9 +82,13 @@ public class ButtonsPanel extends JPanel{
         public void actionPerformed(ActionEvent e) {
             GUI.mode = MyGUI.InputMode.CENTER;
             String text = "" + GUI.canvas.graphAlgo.center();
-            GUI.Console.setText("The center is: "+text);
+            GUI.Console.setText("The center is: " + text);
         }
     }
+
+    /**
+     * Listener for SP button
+     */
     private class SPListener extends JFrame implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String text = "";
@@ -105,13 +97,15 @@ public class ButtonsPanel extends JPanel{
             } else {
                 int source = Integer.parseInt(src.getText());
                 int destination = Integer.parseInt(dst.getText());
-                text += GUI.canvas.graphAlgo.shortestPath(source,destination).toString();
-                text+=" and the dist is "+GUI.canvas.graphAlgo.shortestPathDist(source,destination);
+                text += GUI.canvas.graphAlgo.shortestPath(source, destination).toString();
+                text += " and the dist is " + GUI.canvas.graphAlgo.shortestPathDist(source, destination);
             }
-            GUI.Console.setText("Shortest path is == "+text);
+            GUI.Console.setText("Shortest path is == " + text);
         }
     }
-
+    /**
+     * Listener for TSP button
+     */
     private class TSPListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String text = "";
@@ -125,9 +119,7 @@ public class ButtonsPanel extends JPanel{
                 text += (GUI.canvas.graphAlgo.tsp(city).toString());
             }
 
-            GUI.Console.setText("tsp: "+text);
+            GUI.Console.setText("tsp: " + text);
         }
     }
-
-
 }

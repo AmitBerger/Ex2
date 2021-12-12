@@ -7,13 +7,9 @@ import api.NodeData;
 import Implementation.*;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GraphCanvas extends JComponent {
     /**
@@ -31,10 +27,7 @@ public class GraphCanvas extends JComponent {
     final int BLACK = 0;
     final int GRAY = 1;
     final int BLUE = 2;
-    final int ORANGE = 3;
-
     String fileName;
-
 
     /**
      * Constructor
@@ -127,21 +120,7 @@ public class GraphCanvas extends JComponent {
         g2.draw(new Line2D.Double(x0, y0, x, y));
     }
 
-
-    public void refresh() {
-        Iterator<EdgeData> edgeIter = graph.edgeIter();
-        while (edgeIter.hasNext()) {
-            edgeIter.next().setTag(BLACK);
-        }
-        Iterator<NodeData> nodeIter = graph.nodeIter();
-        while (nodeIter.hasNext()) {
-            nodeIter.next().setTag(BLUE);
-        }
-        repaint();
-    }
-
     public Dimension getMinimumSize() {
-
         return new Dimension(width, height);
     }
 

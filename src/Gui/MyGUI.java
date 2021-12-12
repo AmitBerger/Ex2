@@ -21,17 +21,12 @@ public class MyGUI extends JFrame {
     InputMode mode = InputMode.ADD_NODES;
 
     /**
-     * Stores last mousedown event position.
-     */
-
-    /**
      * Jars functions:
      */
     MenuBar menu;
     GraphCanvas canvas;
     ButtonsPanel buttons;
     ConsoleControl control;
-
 
     /**
      * Stores all the panels.
@@ -48,6 +43,7 @@ public class MyGUI extends JFrame {
         this.setTitle("MY GUI");
         this.setResizable(false);
     }
+
     public MyGUI(String file) {
         this.setResizable(true);
         menu = new MenuBar(this);
@@ -100,7 +96,6 @@ public class MyGUI extends JFrame {
      * Creat & displays the buttons & graph
      */
     private void SetPanels() {
-
         pane = this.getContentPane();
         pane.setLayout(new FlowLayout());
         // Adding the graph panel
@@ -136,13 +131,6 @@ public class MyGUI extends JFrame {
      */
     public static void main(String[] args) {
         new MyGUI();
-    }
-
-    /**
-     * Repaint everything to the default color
-     */
-    public void refresh() {
-        canvas.refresh();
     }
 
 }
