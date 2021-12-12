@@ -105,15 +105,7 @@ public class GraphCanvas extends JComponent {
             // Linearly map the point
             double x = (node.getLocation().x() - NodeMinX) * xScaled * 0.97 + 30;
             double y = (node.getLocation().y() - NodeMinY) * yScaled * 0.97 + 30;
-            if (node.getTag() == BLACK) {
-                g.setColor(Color.BLACK);
-            } else if (node.getTag() == GRAY) {
-                g.setColor(Color.lightGray);
-            } else if (node.getTag() == BLUE) {
-                g.setColor(Color.BLUE);
-            } else {
-                g.setColor(Color.ORANGE);
-            }
+            g.setColor(Color.BLUE);
             g.drawOval((int) x, (int) y, 30, 30);
             Font f = new Font("ariel", Font.BOLD, 16);
             g.setFont(f);
