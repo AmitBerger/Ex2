@@ -124,11 +124,29 @@ public class MyDWG implements DirectedWeightedGraph {
                 if (errorChecker != getMC()) {
                     throw new RuntimeException("A change in the graph accord");
                 }
-                NodeData pos = lastPos;
-                removeNode(currentPos.getKey());
-                nodeIter = nodeList.values().iterator();
+                // Get the last Pos:
+                if (currentPos != null) {
+                    Iterator<NodeData> newIter = nodeList.values().iterator();
+                    NodeData i = null;
+                    while (newIter.hasNext() && i != currentPos) { //for case of remove
+                        lastPos = i;
+                        i = newIter.next();
+                    }
+                    // Now we have the last pos!
+                    removeNode(currentPos.getKey());
+                    i = null;
+                    // Now lets Creat a new iterator that doest have the removed value
+                    nodeIter = nodeList.values().iterator();
+                    // Restore the position
+                    while (nodeIter.hasNext() && i != lastPos) { //for case of remove
+                        i = nodeIter.next();
+                    }
+                    currentPos = i;
+                }
+                else{
+                    throw new RuntimeException("Need to move forward in order to remove the next element");
+                }
                 errorChecker = getMC();
-
             }
         };
     }
@@ -139,8 +157,6 @@ public class MyDWG implements DirectedWeightedGraph {
             Iterator<Integer> SrcKeySet = edgeList.keySet().iterator();
             Iterator<EdgeData> currentNodeEdges = edgeIter(SrcKeySet.next());
             private int errorChecker = getMC();
-            private EdgeData currentPos = null;
-            private int currentKeyPos = 0;
 
             @Override
             public boolean hasNext() {
@@ -151,7 +167,7 @@ public class MyDWG implements DirectedWeightedGraph {
                     if (!SrcKeySet.hasNext()) {
                         return false;
                     } else {
-                        currentKeyPos = SrcKeySet.next();
+                        int currentKeyPos = SrcKeySet.next();
                         currentNodeEdges = edgeIter(currentKeyPos);
                     }
                 }
@@ -163,60 +179,74 @@ public class MyDWG implements DirectedWeightedGraph {
                 if (errorChecker != getMC()) {
                     throw new RuntimeException("A change in the graph accord");
                 }
-                currentPos = currentNodeEdges.next();
-                return currentPos;
+                return currentNodeEdges.next();
             }
 
             @Override
             public void remove() {
                 if (errorChecker != getMC()) {
                     throw new RuntimeException("A change in the graph accord");
+                }
+                // Run time exp will be sent in the currentNodeEdges iterator if necessary!
+                currentNodeEdges.remove();
+                // Updating the errorChecker that we won't get a runTimeExp.
+                errorChecker = getMC();
+            }
+        };
+    }
+
+@Override
+public Iterator<EdgeData> edgeIter(int node_id) {
+    return new Iterator<EdgeData>() {
+        Iterator<EdgeData> edgeIter = edgeList.get(node_id).values().iterator();
+        private EdgeData currentPos = null;
+        private EdgeData lastPos = null;
+        private int errorChecker = getMC();
+
+        @Override
+        public boolean hasNext() {
+            if (errorChecker != getMC()) {
+                throw new RuntimeException("A change in the graph accord");
+            }
+            return edgeIter.hasNext();
+        }
+
+        @Override
+        public EdgeData next() {
+            if (errorChecker != getMC()) {
+                throw new RuntimeException("A change in the graph accord");
+            }
+            currentPos = edgeIter.next();
+            return currentPos;
+        }
+
+        @Override
+        public void remove() {
+            EdgeData i = null;
+            if (errorChecker != getMC()) {
+                throw new RuntimeException("A change in the graph accord");
+            } else if (currentPos != null) {
+                Iterator<EdgeData> iterLast = edgeList.get(node_id).values().iterator();
+                i = null;
+                while (iterLast.hasNext() && i != currentPos) { //go to last
+                    lastPos = i;
+                    i = iterLast.next();
                 }
                 removeEdge(currentPos.getSrc(), currentPos.getDest());
-                SrcKeySet = edgeList.keySet().iterator();
-                currentNodeEdges = edgeIter(SrcKeySet.next());
+                edgeIter = edgeList.get(node_id).values().iterator();
+                i = null;
+                while (edgeIter.hasNext() && i != lastPos) { //go to new current
+                    i = edgeIter.next();
+                }
+                currentPos = i;
                 errorChecker = getMC();
             }
-        };
-    }
-
-    @Override
-    public Iterator<EdgeData> edgeIter(int node_id) {
-        return new Iterator<EdgeData>() {
-            Iterator<Integer> edgesKeySet = edgeList.get(node_id).keySet().iterator();
-            private int errorChecker = getMC();
-            private int currentPos = 0;
-
-            @Override
-            public boolean hasNext() {
-                if (errorChecker != getMC()) {
-                    throw new RuntimeException("A change in the graph accord");
-                }
-                return edgesKeySet.hasNext();
+            else{
+                throw new RuntimeException("Need to move forward in order to remove the next element");
             }
-
-            @Override
-            public EdgeData next() {
-                if (errorChecker != getMC()) {
-                    throw new RuntimeException("A change in the graph accord");
-                }
-                currentPos = edgesKeySet.next();
-                return getEdge(node_id, currentPos);
-            }
-
-            @Override
-            public void remove() {
-                if (errorChecker != getMC()) {
-                    throw new RuntimeException("A change in the graph accord");
-                }
-                removeEdge(node_id, currentPos);
-                edgesKeySet = edgeList.get(node_id).keySet().iterator();
-                errorChecker = getMC();
-
-            }
-        };
-    }
-
+        }
+    };
+}
     @Override
     public NodeData removeNode(int key) {
 

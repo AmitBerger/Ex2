@@ -71,8 +71,9 @@ public class GraphCanvas extends JComponent {
         Graphics2D g2d = (Graphics2D) g;
         double dx = NodeMaxX - NodeMinX;
         double dy = NodeMaxY - NodeMinY;
-        double xScaled = (width / dx) * 0.75;
-        double yScaled = (width / dy) * 0.75;
+        double xScaled = (width / dx) * 0.739;
+        double yScaled = (width / dy) * 0.739;
+        int nodeSize = 30;
 
         g2d.setPaint(Color.BLACK);
         Iterator<EdgeData> edgeIter = graph.edgeIter();
@@ -83,10 +84,10 @@ public class GraphCanvas extends JComponent {
             }
             GeoLocation geo1 = this.graph.getNode(edge.getSrc()).getLocation();
             GeoLocation geo2 = this.graph.getNode(edge.getDest()).getLocation();
-            double x1 = (int) ((geo1.x() - NodeMinX) * xScaled * 0.97 + 30);
-            double y1 = (int) ((geo1.y() - NodeMinY) * yScaled * 0.97 + 30);
-            double x2 = (int) (((geo2).x() - NodeMinX) * xScaled * 0.97 + 30);
-            double y2 = (int) ((geo2.y() - NodeMinY) * yScaled * 0.97 + 30);
+            double x1 = (int) ((geo1.x() - NodeMinX) * xScaled * 0.965 + nodeSize);
+            double y1 = (int) ((geo1.y() - NodeMinY) * yScaled * 0.965 + nodeSize);
+            double x2 = (int) (((geo2).x() - NodeMinX) * xScaled * 0.965 + nodeSize);
+            double y2 = (int) ((geo2.y() - NodeMinY) * yScaled * 0.965 + nodeSize);
             g2d.setStroke(new BasicStroke(1));
             g2d.draw(new Line2D.Double(x1 + 15, y1 + 15, x2 + 15, y2 + 15));
             drawArrowHead(g2d, Math.atan2(y2 - y1 + 15, x2 - x1 + 15), x2 + 15, y2 + 15);
@@ -95,9 +96,9 @@ public class GraphCanvas extends JComponent {
         Iterator<NodeData> nodeIter = graph.nodeIter();
         while (nodeIter.hasNext()) {
             NodeData node = nodeIter.next();
-            // Linearly map the point
-            double x = (node.getLocation().x() - NodeMinX) * xScaled * 0.97 + 30;
-            double y = (node.getLocation().y() - NodeMinY) * yScaled * 0.97 + 30;
+            // scale:
+            double x = (node.getLocation().x() - NodeMinX) * xScaled * 0.965 + nodeSize;
+            double y = (node.getLocation().y() - NodeMinY) * yScaled * 0.965 + nodeSize;
             g.setColor(Color.BLUE);
             g.drawOval((int) x, (int) y, 30, 30);
             Font f = new Font("ariel", Font.BOLD, 16);
@@ -107,7 +108,7 @@ public class GraphCanvas extends JComponent {
         }
     }
 
-    // taken from https://coderanch.com/t/339505/java/drawing-arrows
+    // https://coderanch.com/t/339505/java/drawing-arrows
     private void drawArrowHead(Graphics2D g2, double theta, double x0, double y0) {
         double barb = 7;
         double phi = Math.PI / 6;
