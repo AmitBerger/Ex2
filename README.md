@@ -93,7 +93,7 @@ Which has its own graph object.
 
 **How to run my code:**
 
-In the commend line in this format: java -jar Ex2.jar G1.json 
+In the commend line in this format: java -jar (path)Ex2.jar G1.json 
 
 *Example:*
 
