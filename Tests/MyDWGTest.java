@@ -6,6 +6,8 @@ import Implementation.Node;
 import org.junit.jupiter.api.Test;
 import api.*;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyDWGTest {
@@ -93,6 +95,50 @@ class MyDWGTest {
         g.removeNode(n2.getKey());
         assertNull(g.getNode(n1.getKey()));
         assertEquals(0, g.getEdgeList().size());
+
+        initValues(g);
+        Iterator<NodeData> nodeIter = g.nodeIter();
+        while (nodeIter.hasNext()){
+            nodeIter.next();
+            nodeIter.remove();
+        }
+        assertEquals(0, g.nodeSize());
+
+        g = new MyDWG();
+        initValues(g);
+        Iterator<EdgeData> edgeIter = g.edgeIter(a.getKey());
+        while (edgeIter.hasNext()){
+            edgeIter.next();
+            edgeIter.remove();
+        }
+        assertEquals(3, g.edgeSize());
+
+        g = new MyDWG();
+        initValues(g);
+        Iterator<EdgeData> edgeIter2 = g.edgeIter();
+        while (edgeIter2.hasNext()){
+            edgeIter2.next();
+            edgeIter2.remove();
+        }
+        assertEquals(0, g.edgeSize());
+
+    }
+
+    public void initValues(MyDWG g){
+        g.addNode(n1);
+        g.addNode(n2);
+        g.addNode(a);
+        g.addNode(b);
+        g.addNode(c);
+        g.addNode(d);
+        g.addNode(e);
+        g.connect(a.getKey(),b.getKey(),1);
+        g.connect(a.getKey(),c.getKey(),2);
+        g.connect(a.getKey(),d.getKey(),3);
+        g.connect(a.getKey(),e.getKey(),4);
+        g.connect(c.getKey(),b.getKey(),5);
+        g.connect(c.getKey(),d.getKey(),6);
+        g.connect(c.getKey(),e.getKey(),7);
     }
 
 
